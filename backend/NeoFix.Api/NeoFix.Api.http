@@ -1,0 +1,6 @@
+@NeoFix.Api_HostAddress = http://localhost:5047
+
+GET {{NeoFix.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
