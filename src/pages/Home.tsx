@@ -26,6 +26,7 @@ const steps = [
 export default function Home() {
   return (
     <>
+      {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-brand-50 to-slate-50" />
         <div className="mx-auto max-w-6xl px-4 py-20 text-center sm:py-28">
@@ -36,16 +37,21 @@ export default function Home() {
             Ремонт гаджетів швидко, чесно та з гарантією
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
-            Полагодимо смартфон, ноутбук чи планшет. Записуйтесь онлайн.
+            Полагодимо смартфон, ноутбук чи планшет. Дізнайтесь приблизну ціну за
+            секунди з нашим AI-помічником і запишіться онлайн.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <a href="#contact" className="rounded-xl bg-brand-600 px-6 py-3 font-medium text-white transition hover:bg-brand-700">
               Записатись на ремонт
             </a>
+            <a href="#price" className="rounded-xl border border-slate-300 bg-white px-6 py-3 font-medium text-slate-700 transition hover:border-brand-500 hover:text-brand-600">
+              Розрахувати ціну з AI
+            </a>
           </div>
         </div>
       </section>
 
+      {/* Services */}
       <section id="services" className="mx-auto max-w-6xl px-4 py-16">
         <h2 className="text-center text-3xl font-bold text-slate-900">Що ремонтуємо</h2>
         <p className="mt-2 text-center text-slate-600">Працюємо з усіма популярними брендами та моделями</p>
@@ -62,6 +68,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* How it works */}
       <section id="how" className="bg-white py-16">
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-center text-3xl font-bold text-slate-900">Як це працює</h2>
@@ -77,6 +84,40 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* AI price teaser */}
+      <section id="price" className="mx-auto max-w-6xl px-4 py-16">
+        <div className="rounded-3xl bg-gradient-to-br from-brand-600 to-brand-700 px-6 py-12 text-center text-white sm:px-12">
+          <Bot className="mx-auto" size={40} />
+          <h2 className="mt-4 text-3xl font-bold">AI-калькулятор вартості ремонту</h2>
+          <p className="mx-auto mt-3 max-w-xl text-brand-100">
+            Вкажіть тип, модель гаджета та опишіть поломку — штучний інтелект
+            миттєво порахує приблизну вартість. Скоро доступно.
+          </p>
+          <button
+            disabled
+            className="mt-6 cursor-not-allowed rounded-xl bg-white/90 px-6 py-3 font-medium text-brand-700"
+          >
+            Скоро 🚀
+          </button>
+        </div>
+      </section>
+
+      {/* Contact / booking placeholder */}
+      <section id="contact" className="bg-white py-16">
+        <div className="mx-auto max-w-2xl px-4 text-center">
+          <h2 className="text-3xl font-bold text-slate-900">Записатись на ремонт</h2>
+          <p className="mt-2 text-slate-600">Залиште заявку — ми зв’яжемось з вами найближчим часом.</p>
+          <form className="mt-8 grid gap-4 text-left" onSubmit={(e) => e.preventDefault()}>
+            <input className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-brand-500" placeholder="Ваше ім’я" />
+            <input className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-brand-500" placeholder="Телефон" />
+            <input className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-brand-500" placeholder="Що сталося з гаджетом?" />
+            <button className="rounded-xl bg-brand-600 px-6 py-3 font-medium text-white transition hover:bg-brand-700">
+              Надіслати заявку
+            </button>
+          </form>
         </div>
       </section>
     </>
