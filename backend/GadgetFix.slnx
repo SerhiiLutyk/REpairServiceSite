@@ -1,0 +1,30 @@
+<Solution>
+  <Folder Name="/Services/" />
+  <Folder Name="/Services/AI/">
+    <Project Path="Services/AI/GadgetFix.AI.Api/GadgetFix.AI.Api.csproj" />
+  </Folder>
+  <Folder Name="/Services/Catalog/">
+    <Project Path="Services/Catalog/GadgetFix.Catalog.Api/GadgetFix.Catalog.Api.csproj" />
+    <Project Path="Services/Catalog/GadgetFix.Catalog.BLL/GadgetFix.Catalog.BLL.csproj" />
+    <Project Path="Services/Catalog/GadgetFix.Catalog.DAL/GadgetFix.Catalog.DAL.csproj" />
+  </Folder>
+  <Folder Name="/Services/Notifications/">
+    <Project Path="Services/Notifications/GadgetFix.Notifications.Api/GadgetFix.Notifications.Api.csproj" />
+  </Folder>
+  <Folder Name="/Services/Orders/">
+    <Project Path="Services/Orders/GadgetFix.Orders.Api/GadgetFix.Orders.Api.csproj" />
+    <Project Path="Services/Orders/GadgetFix.Orders.BLL/GadgetFix.Orders.BLL.csproj" />
+    <Project Path="Services/Orders/GadgetFix.Orders.DAL/GadgetFix.Orders.DAL.csproj" />
+  </Folder>
+  <Folder Name="/Services/Users/">
+    <Project Path="Services/Users/GadgetFix.Users.Api/GadgetFix.Users.Api.csproj" />
+    <Project Path="Services/Users/GadgetFix.Users.BLL/GadgetFix.Users.BLL.csproj" />
+    <Project Path="Services/Users/GadgetFix.Users.DAL/GadgetFix.Users.DAL.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/GadgetFix.Tests/GadgetFix.Tests.csproj" />
+  </Folder>
+  <Project Path="GadgetFix.ApiGateway/GadgetFix.ApiGateway.csproj" />
+  <Project Path="GadgetFix.AppHost/GadgetFix.AppHost.csproj" />
+  <Project Path="GadgetFix.ServiceDefaults/GadgetFix.ServiceDefaults.csproj" />
+</Solution>

@@ -1,0 +1,24 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.3.5">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>3f0a9775-953b-4c49-9225-0f25776e8664</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.3.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Services\Users\GadgetFix.Users.Api\GadgetFix.Users.Api.csproj" />
+    <ProjectReference Include="..\Services\Catalog\GadgetFix.Catalog.Api\GadgetFix.Catalog.Api.csproj" />
+    <ProjectReference Include="..\Services\Orders\GadgetFix.Orders.Api\GadgetFix.Orders.Api.csproj" />
+    <ProjectReference Include="..\Services\AI\GadgetFix.AI.Api\GadgetFix.AI.Api.csproj" />
+    <ProjectReference Include="..\Services\Notifications\GadgetFix.Notifications.Api\GadgetFix.Notifications.Api.csproj" />
+    <ProjectReference Include="..\GadgetFix.ApiGateway\GadgetFix.ApiGateway.csproj" />
+  </ItemGroup>
+
+</Project>
