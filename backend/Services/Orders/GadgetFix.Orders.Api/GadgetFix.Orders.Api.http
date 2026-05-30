@@ -1,0 +1,6 @@
+@GadgetFix.Orders.Api_HostAddress = http://localhost:5007
+
+GET {{GadgetFix.Orders.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
