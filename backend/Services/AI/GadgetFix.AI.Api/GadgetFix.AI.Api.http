@@ -1,0 +1,6 @@
+@GadgetFix.AI.Api_HostAddress = http://localhost:5277
+
+GET {{GadgetFix.AI.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
