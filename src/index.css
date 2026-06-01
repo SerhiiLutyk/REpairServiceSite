@@ -1,11 +1,16 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-brand-50: #eef4ff;
-  --color-brand-100: #d9e6ff;
+  --color-brand-50: #eef3ff;
+  --color-brand-100: #dbe6ff;
+  --color-brand-200: #bcd0ff;
+  --color-brand-300: #8eaeff;
+  --color-brand-400: #5b82ff;
   --color-brand-500: #3b6cff;
   --color-brand-600: #2553e6;
   --color-brand-700: #1b40b8;
+  --color-brand-800: #1a3690;
+  --color-brand-900: #1b3174;
   --font-sans: 'Inter', system-ui, sans-serif;
 }
 
@@ -15,4 +20,30 @@ html {
 
 body {
   @apply bg-slate-50 text-slate-900 antialiased;
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+/* Декоративні градієнтні плями */
+.blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.45;
+  z-index: -1;
+}
+
+/* Градієнтний текст */
+.text-gradient {
+  background: linear-gradient(120deg, var(--color-brand-500), #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Картка зі скляним ефектом */
+.card {
+  @apply rounded-2xl border border-slate-200/80 bg-white shadow-sm transition;
+}
+.card:hover {
+  @apply -translate-y-1 shadow-xl shadow-brand-600/5;
 }

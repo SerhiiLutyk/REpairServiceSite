@@ -29,25 +29,41 @@ export default function Home() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-brand-50 to-slate-50" />
-        <div className="mx-auto max-w-6xl px-4 py-20 text-center sm:py-28">
-          <span className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-white px-4 py-1.5 text-sm font-medium text-brand-700">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-brand-50 via-white to-slate-50" />
+        <div className="blob -left-20 -top-20 h-72 w-72 bg-brand-300" />
+        <div className="blob -right-16 top-10 h-80 w-80 bg-violet-300" />
+        <div className="mx-auto max-w-6xl px-4 py-24 text-center sm:py-32">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-white/80 px-4 py-1.5 text-sm font-medium text-brand-700 shadow-sm backdrop-blur">
             <Sparkles size={15} /> Ремонт з AI-оцінкою вартості
           </span>
-          <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-extrabold tracking-tight text-slate-900 sm:text-6xl">
-            Ремонт гаджетів швидко, чесно та з гарантією
+          <h1 className="mx-auto mt-6 max-w-3xl text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl">
+            Ремонт гаджетів <span className="text-gradient">швидко й чесно</span>
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
             Полагодимо смартфон, ноутбук чи планшет. Дізнайтесь приблизну ціну за
             секунди з нашим AI-помічником і запишіться онлайн.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link to="/booking" className="rounded-xl bg-brand-600 px-6 py-3 font-medium text-white transition hover:bg-brand-700">
+          <div className="mt-9 flex flex-wrap justify-center gap-3">
+            <Link to="/booking" className="rounded-xl bg-brand-600 px-7 py-3.5 font-medium text-white shadow-lg shadow-brand-600/25 transition hover:bg-brand-700 hover:shadow-brand-600/40">
               Записатись на ремонт
             </Link>
-            <Link to="/calculator" className="rounded-xl border border-slate-300 bg-white px-6 py-3 font-medium text-slate-700 transition hover:border-brand-500 hover:text-brand-600">
+            <Link to="/calculator" className="rounded-xl border border-slate-300 bg-white px-7 py-3.5 font-medium text-slate-700 transition hover:border-brand-500 hover:text-brand-600">
               Розрахувати ціну з AI
             </Link>
+          </div>
+
+          {/* Статистика */}
+          <div className="mx-auto mt-14 grid max-w-2xl grid-cols-3 gap-4">
+            {[
+              { v: '10 000+', l: 'ремонтів' },
+              { v: '24 год', l: 'середній термін' },
+              { v: 'до 6 міс', l: 'гарантія' },
+            ].map((s) => (
+              <div key={s.l}>
+                <p className="text-2xl font-extrabold text-slate-900 sm:text-3xl">{s.v}</p>
+                <p className="mt-1 text-sm text-slate-500">{s.l}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -58,8 +74,8 @@ export default function Home() {
         <p className="mt-2 text-center text-slate-600">Працюємо з усіма популярними брендами та моделями</p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((s) => (
-            <div key={s.title} className="rounded-2xl border border-slate-200 bg-white p-6 transition hover:-translate-y-1 hover:shadow-lg">
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+            <div key={s.title} className="card p-6">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-md shadow-brand-600/20">
                 <s.icon size={24} />
               </span>
               <h3 className="mt-4 text-lg font-semibold text-slate-900">{s.title}</h3>
@@ -90,16 +106,20 @@ export default function Home() {
 
       {/* AI price teaser */}
       <section id="price" className="mx-auto max-w-6xl px-4 py-16">
-        <div className="rounded-3xl bg-gradient-to-br from-brand-600 to-brand-700 px-6 py-12 text-center text-white sm:px-12">
-          <Bot className="mx-auto" size={40} />
-          <h2 className="mt-4 text-3xl font-bold">AI-калькулятор вартості ремонту</h2>
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-700 to-violet-700 px-6 py-14 text-center text-white sm:px-12">
+          <div className="blob -right-10 -top-10 h-56 w-56 bg-white/30" />
+          <div className="blob -bottom-16 left-0 h-56 w-56 bg-violet-400/40" />
+          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white/15 backdrop-blur">
+            <Bot size={34} />
+          </span>
+          <h2 className="mt-5 text-3xl font-bold">AI-калькулятор вартості ремонту</h2>
           <p className="mx-auto mt-3 max-w-xl text-brand-100">
             Вкажіть тип, модель гаджета та опишіть поломку — штучний інтелект
-            миттєво порахує приблизну вартість.
+            запропонує 3 варіанти запчастин і миттєво порахує вартість.
           </p>
           <Link
             to="/calculator"
-            className="mt-6 inline-block rounded-xl bg-white px-6 py-3 font-medium text-brand-700 transition hover:bg-brand-50"
+            className="mt-7 inline-block rounded-xl bg-white px-7 py-3.5 font-medium text-brand-700 shadow-lg transition hover:bg-brand-50"
           >
             Розрахувати вартість
           </Link>
