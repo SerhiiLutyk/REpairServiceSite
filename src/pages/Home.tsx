@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import {
   Smartphone,
   Laptop,
@@ -41,12 +42,12 @@ export default function Home() {
             секунди з нашим AI-помічником і запишіться онлайн.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <a href="#contact" className="rounded-xl bg-brand-600 px-6 py-3 font-medium text-white transition hover:bg-brand-700">
+            <Link to="/booking" className="rounded-xl bg-brand-600 px-6 py-3 font-medium text-white transition hover:bg-brand-700">
               Записатись на ремонт
-            </a>
-            <a href="#price" className="rounded-xl border border-slate-300 bg-white px-6 py-3 font-medium text-slate-700 transition hover:border-brand-500 hover:text-brand-600">
+            </Link>
+            <Link to="/calculator" className="rounded-xl border border-slate-300 bg-white px-6 py-3 font-medium text-slate-700 transition hover:border-brand-500 hover:text-brand-600">
               Розрахувати ціну з AI
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -94,30 +95,28 @@ export default function Home() {
           <h2 className="mt-4 text-3xl font-bold">AI-калькулятор вартості ремонту</h2>
           <p className="mx-auto mt-3 max-w-xl text-brand-100">
             Вкажіть тип, модель гаджета та опишіть поломку — штучний інтелект
-            миттєво порахує приблизну вартість. Скоро доступно.
+            миттєво порахує приблизну вартість.
           </p>
-          <button
-            disabled
-            className="mt-6 cursor-not-allowed rounded-xl bg-white/90 px-6 py-3 font-medium text-brand-700"
+          <Link
+            to="/calculator"
+            className="mt-6 inline-block rounded-xl bg-white px-6 py-3 font-medium text-brand-700 transition hover:bg-brand-50"
           >
-            Скоро 🚀
-          </button>
+            Розрахувати вартість
+          </Link>
         </div>
       </section>
 
-      {/* Contact / booking placeholder */}
+      {/* Contact / booking CTA */}
       <section id="contact" className="bg-white py-16">
         <div className="mx-auto max-w-2xl px-4 text-center">
-          <h2 className="text-3xl font-bold text-slate-900">Записатись на ремонт</h2>
+          <h2 className="text-3xl font-bold text-slate-900">Готові полагодити свій гаджет?</h2>
           <p className="mt-2 text-slate-600">Залиште заявку — ми зв’яжемось з вами найближчим часом.</p>
-          <form className="mt-8 grid gap-4 text-left" onSubmit={(e) => e.preventDefault()}>
-            <input className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-brand-500" placeholder="Ваше ім’я" />
-            <input className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-brand-500" placeholder="Телефон" />
-            <input className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-brand-500" placeholder="Що сталося з гаджетом?" />
-            <button className="rounded-xl bg-brand-600 px-6 py-3 font-medium text-white transition hover:bg-brand-700">
-              Надіслати заявку
-            </button>
-          </form>
+          <Link
+            to="/booking"
+            className="mt-6 inline-block rounded-xl bg-brand-600 px-6 py-3 font-medium text-white transition hover:bg-brand-700"
+          >
+            Записатись на ремонт
+          </Link>
         </div>
       </section>
     </>

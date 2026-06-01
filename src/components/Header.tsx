@@ -2,10 +2,9 @@ import { Link } from 'react-router-dom'
 import { Wrench } from 'lucide-react'
 
 const links = [
-  { href: '#services', label: 'Послуги' },
-  { href: '#how', label: 'Як це працює' },
-  { href: '#price', label: 'AI-калькулятор' },
-  { href: '#contact', label: 'Контакти' },
+  { to: '/calculator', label: 'AI-калькулятор' },
+  { to: '/booking', label: 'Запис на ремонт' },
+  { to: '/admin', label: 'Адмінка' },
 ]
 
 export default function Header() {
@@ -21,18 +20,18 @@ export default function Header() {
 
         <nav className="hidden items-center gap-6 md:flex">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="text-sm text-slate-600 transition hover:text-brand-600">
+            <Link key={l.to} to={l.to} className="text-sm text-slate-600 transition hover:text-brand-600">
               {l.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
-        <a
-          href="#contact"
+        <Link
+          to="/booking"
           className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-700"
         >
           Записатись
-        </a>
+        </Link>
       </div>
     </header>
   )
