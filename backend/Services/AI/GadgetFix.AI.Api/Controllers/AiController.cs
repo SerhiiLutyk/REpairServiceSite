@@ -4,16 +4,16 @@ namespace GadgetFix.AI.Api.Controllers;
 
 [ApiController]
 [Route("api/ai")]
-public class AiController(PriceEstimator estimator) : ControllerBase
+public class AiController(IEstimateService estimator) : ControllerBase
 {
-    /// <summary>Оцінка приблизної вартості ремонту за описом.</summary>
+    /// <summary>Оцінка приблизної вартості ремонту за описом (LLM Groq з фолбеком на евристику).</summary>
     [HttpPost("estimate")]
-    public ActionResult<EstimateResult> Estimate(EstimateRequest request)
+    public async Task<ActionResult<EstimateResult>> Estimate(EstimateRequest request, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(request.DeviceType) || string.IsNullOrWhiteSpace(request.Problem))
             return BadRequest(new { error = "Вкажіть тип гаджета та опис поломки." });
 
-        return Ok(estimator.Estimate(request));
+        return Ok(await estimator.EstimateAsync(request, ct));
     }
 
     /// <summary>

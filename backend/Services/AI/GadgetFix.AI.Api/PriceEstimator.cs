@@ -2,7 +2,16 @@ namespace GadgetFix.AI.Api;
 
 public record EstimateRequest(string DeviceType, string? Model, string Problem);
 
-public record EstimateResult(decimal Min, decimal Max, string Currency, string Explanation, double Confidence);
+/// <summary>Варіант ремонту за типом запчастини.</summary>
+public record PartOption(string Tier, decimal Min, decimal Max, string Description);
+
+public record EstimateResult(
+    decimal Min,
+    decimal Max,
+    string Currency,
+    string Explanation,
+    double Confidence,
+    IReadOnlyList<PartOption> Options);
 
 /// <summary>
 /// Евристична оцінка вартості ремонту за типом гаджета та описом поломки.
@@ -52,8 +61,21 @@ public class PriceEstimator
         }
 
         var mid = baseline * factor;
-        var min = Math.Round(mid * 0.85m, 0);
-        var max = Math.Round(mid * 1.25m, 0);
+
+        // Три цінові рівні запчастин
+        decimal R(decimal v) => Math.Round(v, 0);
+        var options = new List<PartOption>
+        {
+            new("Китайські (бюджет)", R(mid * 0.6m), R(mid * 0.85m),
+                "Найдешевший варіант, неоригінальні комплектуючі. Гарантія коротша."),
+            new("Китайські (середні)", R(mid * 0.9m), R(mid * 1.15m),
+                "Якісні сумісні запчастини — оптимальне співвідношення ціна/якість."),
+            new("Оригінальні", R(mid * 1.25m), R(mid * 1.7m),
+                "Оригінальні комплектуючі виробника. Максимальна якість і гарантія."),
+        };
+
+        var min = options.Min(o => o.Min);
+        var max = options.Max(o => o.Max);
 
         var confidence = matched.Count == 0 ? 0.4 : Math.Min(0.9, 0.55 + matched.Count * 0.15);
         var what = matched.Count == 0 ? "загальна діагностика" : string.Join(", ", matched);
@@ -62,6 +84,6 @@ public class PriceEstimator
             $"Орієнтовно для {request.DeviceType}{model}: {what}. " +
             "Точна ціна — після діагностики майстром.";
 
-        return new EstimateResult(min, max, "грн", explanation, confidence);
+        return new EstimateResult(min, max, "грн", explanation, confidence, options);
     }
 }

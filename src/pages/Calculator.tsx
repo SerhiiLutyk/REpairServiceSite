@@ -80,13 +80,30 @@ export default function Calculator() {
       {error && <p className="mt-4 rounded-xl bg-red-50 p-4 text-sm text-red-700">{error}</p>}
 
       {result && (
-        <div className="mt-6 rounded-2xl border border-brand-100 bg-brand-50 p-6">
-          <p className="text-sm text-brand-700">Орієнтовна вартість</p>
-          <p className="mt-1 text-3xl font-bold text-slate-900">
-            {result.min}–{result.max} {result.currency}
-          </p>
-          <p className="mt-3 text-sm text-slate-600">{result.explanation}</p>
-          <p className="mt-2 text-xs text-slate-400">
+        <div className="mt-6">
+          <div className="rounded-2xl border border-brand-100 bg-brand-50 p-5">
+            <p className="text-sm text-brand-700">Орієнтовна вартість</p>
+            <p className="mt-1 text-3xl font-bold text-slate-900">
+              {result.min}–{result.max} {result.currency}
+            </p>
+            {result.explanation && <p className="mt-2 text-sm text-slate-600">{result.explanation}</p>}
+          </div>
+
+          {result.options?.length > 0 && (
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              {result.options.map((o) => (
+                <div key={o.tier} className="rounded-2xl border border-slate-200 bg-white p-4">
+                  <p className="font-semibold text-slate-900">{o.tier}</p>
+                  <p className="mt-1 text-lg font-bold text-brand-600">
+                    {o.min}–{o.max} {result.currency}
+                  </p>
+                  <p className="mt-2 text-xs leading-relaxed text-slate-500">{o.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <p className="mt-3 text-xs text-slate-400">
             Впевненість оцінки: {Math.round(result.confidence * 100)}%
           </p>
         </div>
