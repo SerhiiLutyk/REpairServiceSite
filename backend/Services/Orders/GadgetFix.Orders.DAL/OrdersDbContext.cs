@@ -6,6 +6,7 @@ namespace GadgetFix.Orders.DAL;
 public class OrdersDbContext(DbContextOptions<OrdersDbContext> options) : DbContext(options)
 {
     public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OrderStatusHistory> StatusHistory => Set<OrderStatusHistory>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -17,6 +18,13 @@ public class OrdersDbContext(DbContextOptions<OrdersDbContext> options) : DbCont
             e.Property(o => o.ProblemDescription).HasMaxLength(1000);
             e.Property(o => o.EstimatedPrice).HasColumnType("numeric(10,2)");
             e.HasIndex(o => o.Status);
+            e.HasMany(o => o.History).WithOne().HasForeignKey(h => h.OrderId);
+        });
+
+        modelBuilder.Entity<OrderStatusHistory>(e =>
+        {
+            e.HasKey(h => h.Id);
+            e.HasIndex(h => h.OrderId);
         });
     }
 }

@@ -14,6 +14,8 @@ public record CreateOrderRequest(
 
 public record UpdateStatusRequest(OrderStatus Status);
 
+public record StatusHistoryDto(OrderStatus Status, DateTime ChangedAt);
+
 public record OrderDto(
     Guid Id,
     Guid? UserId,
@@ -25,10 +27,12 @@ public record OrderDto(
     decimal? EstimatedPrice,
     OrderStatus Status,
     DateTime CreatedAt,
-    DateTime UpdatedAt)
+    DateTime UpdatedAt,
+    IReadOnlyList<StatusHistoryDto> History)
 {
     public static OrderDto From(Order o) => new(o.Id, o.UserId, o.CustomerName, o.Phone, o.DeviceTypeId,
-        o.ServiceId, o.ProblemDescription, o.EstimatedPrice, o.Status, o.CreatedAt, o.UpdatedAt);
+        o.ServiceId, o.ProblemDescription, o.EstimatedPrice, o.Status, o.CreatedAt, o.UpdatedAt,
+        o.History.OrderBy(h => h.ChangedAt).Select(h => new StatusHistoryDto(h.Status, h.ChangedAt)).ToList());
 }
 
 /// <summary>Клієнт сервісу нотифікацій (Telegram). Реалізація — в Api-шарі.</summary>
@@ -49,17 +53,18 @@ public interface IOrderService
 public class OrderService(OrdersDbContext db, IOrderNotifier notifier) : IOrderService
 {
     public async Task<IReadOnlyList<OrderDto>> GetAllAsync(CancellationToken ct = default) =>
-        await db.Orders.AsNoTracking().OrderByDescending(o => o.CreatedAt)
-            .Select(o => OrderDto.From(o)).ToListAsync(ct);
+        (await db.Orders.AsNoTracking().Include(o => o.History)
+            .OrderByDescending(o => o.CreatedAt).ToListAsync(ct))
+            .Select(OrderDto.From).ToList();
 
     public async Task<IReadOnlyList<OrderDto>> GetByUserAsync(Guid userId, CancellationToken ct = default) =>
-        await db.Orders.AsNoTracking().Where(o => o.UserId == userId)
-            .OrderByDescending(o => o.CreatedAt)
-            .Select(o => OrderDto.From(o)).ToListAsync(ct);
+        (await db.Orders.AsNoTracking().Include(o => o.History).Where(o => o.UserId == userId)
+            .OrderByDescending(o => o.CreatedAt).ToListAsync(ct))
+            .Select(OrderDto.From).ToList();
 
     public async Task<OrderDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        var order = await db.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id, ct);
+        var order = await db.Orders.AsNoTracking().Include(o => o.History).FirstOrDefaultAsync(o => o.Id == id, ct);
         return order is null ? null : OrderDto.From(order);
     }
 
@@ -75,6 +80,7 @@ public class OrderService(OrdersDbContext db, IOrderNotifier notifier) : IOrderS
             ProblemDescription = request.ProblemDescription.Trim(),
             EstimatedPrice = request.EstimatedPrice,
         };
+        order.History.Add(new OrderStatusHistory { Status = OrderStatus.New });
         db.Orders.Add(order);
         await db.SaveChangesAsync(ct);
         return OrderDto.From(order);
@@ -82,12 +88,13 @@ public class OrderService(OrdersDbContext db, IOrderNotifier notifier) : IOrderS
 
     public async Task<OrderDto?> UpdateStatusAsync(Guid id, OrderStatus status, CancellationToken ct = default)
     {
-        var order = await db.Orders.FirstOrDefaultAsync(o => o.Id == id, ct);
+        var order = await db.Orders.Include(o => o.History).FirstOrDefaultAsync(o => o.Id == id, ct);
         if (order is null) return null;
 
         var wasReady = order.Status == OrderStatus.Ready;
         order.Status = status;
         order.UpdatedAt = DateTime.UtcNow;
+        order.History.Add(new OrderStatusHistory { OrderId = order.Id, Status = status });
         await db.SaveChangesAsync(ct);
 
         var dto = OrderDto.From(order);

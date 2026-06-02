@@ -92,6 +92,7 @@ export interface Order {
   status: number
   createdAt: string
   updatedAt: string
+  history?: { status: number; changedAt: string }[]
 }
 
 export interface CreateOrder {

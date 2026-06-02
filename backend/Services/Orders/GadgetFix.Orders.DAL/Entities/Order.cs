@@ -23,4 +23,6 @@ public class Order
     public OrderStatus Status { get; set; } = OrderStatus.New;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    public List<OrderStatusHistory> History { get; set; } = [];
 }

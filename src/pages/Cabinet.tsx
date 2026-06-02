@@ -162,6 +162,16 @@ export default function Cabinet() {
                     {new Date(o.createdAt).toLocaleDateString('uk-UA')}
                     {o.estimatedPrice ? ` · ~${o.estimatedPrice} грн` : ''}
                   </p>
+                  {o.history && o.history.length > 1 && (
+                    <ol className="mt-3 space-y-1 border-l-2 border-slate-100 pl-3">
+                      {o.history.map((h, i) => (
+                        <li key={i} className="text-xs text-slate-500">
+                          <span className="font-medium text-slate-700">{OrderStatusLabels[h.status]}</span>
+                          {' · '}{new Date(h.changedAt).toLocaleString('uk-UA', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                        </li>
+                      ))}
+                    </ol>
+                  )}
                 </li>
               ))}
             </ul>
