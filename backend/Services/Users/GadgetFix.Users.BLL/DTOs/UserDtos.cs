@@ -4,7 +4,7 @@ namespace GadgetFix.Users.BLL.DTOs;
 
 public record RegisterRequest(string FullName, string Phone, string? Email, string Password);
 
-public record LoginRequest(string Phone, string Password);
+public record LoginRequest(string Login, string Password);
 
 public record UpdateProfileRequest(string FullName, string? Email, string? TelegramChatId);
 

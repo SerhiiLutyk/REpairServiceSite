@@ -50,7 +50,11 @@ public class UserService(UsersDbContext db) : IUserService
 
     public async Task<UserDto?> LoginAsync(LoginRequest request, CancellationToken ct = default)
     {
-        var user = await db.Users.FirstOrDefaultAsync(u => u.Phone == request.Phone, ct);
+        var login = request.Login.Trim();
+        var loginLower = login.ToLower();
+        // Вхід за телефоном АБО email
+        var user = await db.Users.FirstOrDefaultAsync(
+            u => u.Phone == login || (u.Email != null && u.Email.ToLower() == loginLower), ct);
         if (user is null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             return null;
         return UserDto.From(user);

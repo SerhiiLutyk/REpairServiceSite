@@ -33,10 +33,10 @@ export const register = (fullName: string, phone: string, password: string, emai
     body: JSON.stringify({ fullName, phone, email, password }),
   })
 
-export const login = (phone: string, password: string) =>
+export const login = (login: string, password: string) =>
   request<AuthResponse>('/api/users/login', {
     method: 'POST',
-    body: JSON.stringify({ phone, password }),
+    body: JSON.stringify({ login, password }),
   })
 
 export const getMe = () => request<User>('/api/users/me')

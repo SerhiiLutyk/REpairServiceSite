@@ -67,7 +67,7 @@ public class UsersController(IUserService users, ITokenService tokens) : Control
     {
         var user = await users.LoginAsync(request, ct);
         return user is null
-            ? Unauthorized(new { error = "Невірний телефон або пароль." })
+            ? Unauthorized(new { error = "Невірний телефон/email або пароль." })
             : Ok(new AuthResponse(tokens.CreateToken(user), user));
     }
 

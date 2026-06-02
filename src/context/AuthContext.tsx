@@ -13,7 +13,7 @@ interface AuthContextValue {
   user: User | null
   loading: boolean
   isAdmin: boolean
-  login: (phone: string, password: string) => Promise<void>
+  login: (login: string, password: string) => Promise<void>
   register: (fullName: string, phone: string, password: string, email?: string) => Promise<void>
   updateProfile: (data: UpdateProfile) => Promise<void>
   logout: () => void
@@ -36,8 +36,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setLoading(false))
   }, [])
 
-  async function login(phone: string, password: string) {
-    const res = await apiLogin(phone, password)
+  async function login(login: string, password: string) {
+    const res = await apiLogin(login, password)
     localStorage.setItem(TOKEN_KEY, res.token)
     setUser(res.user)
   }

@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext'
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
-  const [phone, setPhone] = useState('')
+  const [loginValue, setLoginValue] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -16,7 +16,7 @@ export default function Login() {
     setError(null)
     setLoading(true)
     try {
-      await login(phone, password)
+      await login(loginValue, password)
       navigate('/')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Помилка входу')
@@ -31,10 +31,10 @@ export default function Login() {
       <form onSubmit={onSubmit} className="mt-8 grid gap-4">
         <input
           required
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          value={loginValue}
+          onChange={(e) => setLoginValue(e.target.value)}
           className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-brand-500"
-          placeholder="Телефон"
+          placeholder="Телефон або email"
         />
         <input
           required
