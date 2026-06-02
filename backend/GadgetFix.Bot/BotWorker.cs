@@ -59,14 +59,24 @@ public class BotWorker(TelegramClient tg, BotBackend backend, BotOptions options
     {
         text = text.Trim();
 
-        // Команди / пункти меню мають пріоритет над станом діалогу
+        // /start [код] — звичайний старт або привʼязка через deep-link (t.me/bot?start=КОД)
+        if (text.StartsWith("/start", StringComparison.OrdinalIgnoreCase))
+        {
+            var parts = text.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 2)
+            {
+                await LinkAsync(chat, parts[1].Trim(), ct);
+                return;
+            }
+            _state.TryRemove(chat, out _);
+            await tg.SendAsync(chat,
+                "👋 Вітаємо у <b>GadgetFix</b> — сервіс ремонту гаджетів.\nОберіть дію:", MainMenu, ct);
+            return;
+        }
+
+        // Пункти меню мають пріоритет над станом діалогу
         switch (text)
         {
-            case "/start":
-                _state.TryRemove(chat, out _);
-                await tg.SendAsync(chat,
-                    "👋 Вітаємо у <b>GadgetFix</b> — сервіс ремонту гаджетів.\nОберіть дію:", MainMenu, ct);
-                return;
             case "👤 Акаунт":
                 _state.TryRemove(chat, out _); await ShowAccountAsync(chat, ct); return;
             case "📦 Мої замовлення":

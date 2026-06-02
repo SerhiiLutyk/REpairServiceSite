@@ -35,6 +35,14 @@ public class UserService(UsersDbContext db) : IUserService
         if (await db.Users.AnyAsync(u => u.Phone == request.Phone, ct))
             throw new InvalidOperationException("Користувач з таким телефоном вже існує.");
 
+        var email = request.Email?.Trim();
+        if (!string.IsNullOrWhiteSpace(email))
+        {
+            var emailLower = email.ToLower();
+            if (await db.Users.AnyAsync(u => u.Email != null && u.Email.ToLower() == emailLower, ct))
+                throw new InvalidOperationException("Користувач з таким email вже існує.");
+        }
+
         var user = new User
         {
             FullName = request.FullName.Trim(),
@@ -52,12 +60,14 @@ public class UserService(UsersDbContext db) : IUserService
     {
         var login = request.Login.Trim();
         var loginLower = login.ToLower();
-        // Вхід за телефоном АБО email
-        var user = await db.Users.FirstOrDefaultAsync(
-            u => u.Phone == login || (u.Email != null && u.Email.ToLower() == loginLower), ct);
-        if (user is null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-            return null;
-        return UserDto.From(user);
+        // Вхід за телефоном АБО email. Перевіряємо пароль по всіх кандидатах
+        // (на випадок, якщо email випадково використано в кількох акаунтах).
+        var candidates = await db.Users
+            .Where(u => u.Phone == login || (u.Email != null && u.Email.ToLower() == loginLower))
+            .ToListAsync(ct);
+
+        var user = candidates.FirstOrDefault(u => BCrypt.Net.BCrypt.Verify(request.Password, u.PasswordHash));
+        return user is null ? null : UserDto.From(user);
     }
 
     public async Task<UserDto?> UpdateProfileAsync(Guid id, UpdateProfileRequest request, CancellationToken ct = default)

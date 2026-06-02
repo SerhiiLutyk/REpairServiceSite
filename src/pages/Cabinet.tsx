@@ -14,7 +14,7 @@ const statusColor: Record<number, string> = {
 
 export default function Cabinet() {
   const { user, updateProfile } = useAuth()
-  const [form, setForm] = useState({ fullName: '', email: '', telegramChatId: '' })
+  const [form, setForm] = useState({ fullName: '', email: '' })
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -24,7 +24,7 @@ export default function Cabinet() {
   const [tgCode, setTgCode] = useState<string | null>(null)
 
   useEffect(() => {
-    if (user) setForm({ fullName: user.fullName, email: user.email ?? '', telegramChatId: user.telegramChatId ?? '' })
+    if (user) setForm({ fullName: user.fullName, email: user.email ?? '' })
   }, [user])
 
   useEffect(() => {
@@ -43,7 +43,6 @@ export default function Cabinet() {
       await updateProfile({
         fullName: form.fullName,
         email: form.email || undefined,
-        telegramChatId: form.telegramChatId || undefined,
       })
       setSaved(true)
     } catch (err) {
@@ -92,39 +91,43 @@ export default function Cabinet() {
               <p className="flex items-center gap-2 text-sm font-medium text-brand-700">
                 <Send size={15} /> Telegram-сповіщення
               </p>
-              <p className="mt-1 text-xs text-slate-500">
-                Вкажіть ваш Telegram Chat ID — і бот надішле повідомлення, коли замовлення буде готове.
-                Дізнатися ID: напишіть боту <span className="font-medium">@userinfobot</span>.
-              </p>
-              <input
-                value={form.telegramChatId}
-                onChange={(e) => setForm({ ...form, telegramChatId: e.target.value })}
-                placeholder="напр. 123456789"
-                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-2.5 outline-none focus:border-brand-500"
-              />
-
-              <div className="mt-3 border-t border-brand-100 pt-3">
-                <p className="text-xs text-slate-500">або прив'яжіть через бота автоматично:</p>
-                <button
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      const { code } = await generateTelegramCode()
-                      setTgCode(code)
-                    } catch {
-                      setError('Не вдалося згенерувати код')
-                    }
-                  }}
-                  className="mt-2 rounded-lg border border-brand-300 px-3 py-1.5 text-sm font-medium text-brand-700 transition hover:bg-brand-100"
-                >
-                  Прив'язати Telegram
-                </button>
-                {tgCode && (
-                  <p className="mt-2 text-sm text-slate-600">
-                    Надішліть боту: <code className="rounded bg-white px-2 py-0.5 font-mono text-brand-700">/link {tgCode}</code>
+              {user?.telegramChatId ? (
+                <p className="mt-1 text-xs text-green-600">
+                  ✓ Telegram прив'язано — ви отримаєте повідомлення, коли замовлення буде готове.
+                </p>
+              ) : !tgCode ? (
+                <>
+                  <p className="mt-1 text-xs text-slate-500">
+                    Прив'яжіть Telegram — і бот надішле повідомлення про готовність замовлення.
                   </p>
-                )}
-              </div>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try { setTgCode((await generateTelegramCode()).code) }
+                      catch { setError('Не вдалося згенерувати код') }
+                    }}
+                    className="mt-2 rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-brand-700"
+                  >
+                    Прив'язати Telegram
+                  </button>
+                </>
+              ) : (
+                <div className="mt-2 text-xs text-slate-600">
+                  <a
+                    href={`https://t.me/repairservicesite_bot?start=${tgCode}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-block rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-700"
+                  >
+                    Відкрити бота і прив'язати →
+                  </a>
+                  <p className="mt-2">
+                    Натисніть кнопку, далі <b>Start</b> у Telegram. Якщо не спрацює — у боті{' '}
+                    <a href="https://t.me/repairservicesite_bot" target="_blank" rel="noreferrer" className="font-medium text-brand-700">@repairservicesite_bot</a>{' '}
+                    надішліть: <code className="rounded bg-white px-2 py-0.5 font-mono text-brand-700">/link {tgCode}</code>
+                  </p>
+                </div>
+              )}
             </div>
 
             <button
