@@ -26,5 +26,6 @@
   </Folder>
   <Project Path="GadgetFix.ApiGateway/GadgetFix.ApiGateway.csproj" />
   <Project Path="GadgetFix.AppHost/GadgetFix.AppHost.csproj" />
+  <Project Path="GadgetFix.Bot/GadgetFix.Bot.csproj" />
   <Project Path="GadgetFix.ServiceDefaults/GadgetFix.ServiceDefaults.csproj" />
 </Solution>

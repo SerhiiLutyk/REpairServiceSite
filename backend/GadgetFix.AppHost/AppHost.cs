@@ -2,6 +2,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 // PostgreSQL у контейнері (Docker) з веб-адмінкою pgAdmin
 var postgres = builder.AddPostgres("postgres")
+    .WithImageTag("17.6-bookworm")
     .WithDataVolume()
     .WithPgAdmin();
 
@@ -25,7 +26,14 @@ var ai = builder.AddProject<Projects.GadgetFix_AI_Api>("ai-api");
 var orders = builder.AddProject<Projects.GadgetFix_Orders_Api>("orders-api")
     .WithReference(ordersDb)
     .WithReference(notifications)
+    .WithReference(users)
     .WaitFor(ordersDb);
+
+// Telegram-бот (long polling) — спілкується з Users / Orders / AI
+builder.AddProject<Projects.GadgetFix_Bot>("bot")
+    .WithReference(users)
+    .WithReference(orders)
+    .WithReference(ai);
 
 // API Gateway (YARP) — єдина точка входу для фронтенду
 builder.AddProject<Projects.GadgetFix_ApiGateway>("gateway")

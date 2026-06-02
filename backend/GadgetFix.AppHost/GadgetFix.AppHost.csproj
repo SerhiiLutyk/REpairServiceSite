@@ -19,6 +19,7 @@
     <ProjectReference Include="..\Services\AI\GadgetFix.AI.Api\GadgetFix.AI.Api.csproj" />
     <ProjectReference Include="..\Services\Notifications\GadgetFix.Notifications.Api\GadgetFix.Notifications.Api.csproj" />
     <ProjectReference Include="..\GadgetFix.ApiGateway\GadgetFix.ApiGateway.csproj" />
+    <ProjectReference Include="..\GadgetFix.Bot\GadgetFix.Bot.csproj" />
   </ItemGroup>
 
 </Project>
