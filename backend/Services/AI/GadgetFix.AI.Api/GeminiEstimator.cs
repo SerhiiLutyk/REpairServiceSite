@@ -11,6 +11,39 @@ public class GeminiEstimator(HttpClient http, IConfiguration config, ILogger<Gem
 
     public bool Enabled => !string.IsNullOrWhiteSpace(_apiKey);
 
+    /// <summary>Чат підтримки на базі Gemini.</summary>
+    public async Task<string> ChatAsync(IEnumerable<ChatMessage> messages, CancellationToken ct)
+    {
+        const string system =
+            "Ти — ввічливий онлайн-консультант сервісного центру GadgetFix (ремонт гаджетів в Україні). " +
+            "Відповідай коротко українською про ремонт, орієнтовні ціни, терміни, гарантію та запис. " +
+            "Якщо питання не по темі — м'яко поверни до теми ремонту.";
+
+        var contents = messages.Select(m => new
+        {
+            role = m.Role == "assistant" ? "model" : "user",
+            parts = new[] { new { text = m.Content } },
+        }).ToArray();
+
+        var payload = new
+        {
+            system_instruction = new { parts = new[] { new { text = system } } },
+            contents,
+            generationConfig = new { temperature = 0.6 },
+        };
+
+        var url = $"https://generativelanguage.googleapis.com/v1beta/models/{_model}:generateContent";
+        using var req = new HttpRequestMessage(HttpMethod.Post, url);
+        req.Headers.Add("x-goog-api-key", _apiKey);
+        req.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+
+        using var resp = await http.SendAsync(req, ct);
+        resp.EnsureSuccessStatusCode();
+        using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+        return doc.RootElement.GetProperty("candidates")[0].GetProperty("content")
+            .GetProperty("parts")[0].GetProperty("text").GetString() ?? "…";
+    }
+
     /// <summary>Розпізнавання типу/моделі гаджета за фото (Gemini Vision).</summary>
     public async Task<PhotoResult> AnalyzePhotoAsync(string base64, string mime, CancellationToken ct)
     {
