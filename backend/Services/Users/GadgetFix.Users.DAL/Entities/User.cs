@@ -12,6 +12,8 @@ public class User
     public string FullName { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public string? Email { get; set; }
+    public string? TelegramChatId { get; set; }
+    public string? TelegramLinkCode { get; set; }
     public string PasswordHash { get; set; } = string.Empty;
     public UserRole Role { get; set; } = UserRole.Client;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

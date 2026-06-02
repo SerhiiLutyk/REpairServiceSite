@@ -3,6 +3,7 @@ using System;
 using GadgetFix.Users.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GadgetFix.Users.DAL.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    partial class UsersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260602093353_AddTelegramChatId")]
+    partial class AddTelegramChatId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,9 +56,6 @@ namespace GadgetFix.Users.DAL.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("TelegramChatId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("TelegramLinkCode")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

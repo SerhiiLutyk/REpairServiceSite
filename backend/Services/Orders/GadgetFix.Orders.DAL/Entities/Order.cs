@@ -13,6 +13,7 @@ public enum OrderStatus
 public class Order
 {
     public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid? UserId { get; set; }
     public string CustomerName { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public int DeviceTypeId { get; set; }

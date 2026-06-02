@@ -31,7 +31,7 @@ public class OrderServiceTests
         var service = new OrderService(db, notifier);
 
         var dto = await service.CreateAsync(new CreateOrderRequest(
-            "Тест Клієнт", "+380501112233", 1, 1, "розбитий екран", 1800m));
+            "Тест Клієнт", "+380501112233", 1, 1, "розбитий екран", 1800m), null);
 
         Assert.Equal(OrderStatus.New, dto.Status);
         Assert.Single(await service.GetAllAsync());
@@ -45,7 +45,7 @@ public class OrderServiceTests
         var service = new OrderService(db, notifier);
 
         var dto = await service.CreateAsync(new CreateOrderRequest(
-            "Тест", "+380501112233", 1, null, "не вмикається", null));
+            "Тест", "+380501112233", 1, null, "не вмикається", null), null);
 
         await service.UpdateStatusAsync(dto.Id, OrderStatus.Ready);
         await service.UpdateStatusAsync(dto.Id, OrderStatus.Ready); // повторно — без дубля

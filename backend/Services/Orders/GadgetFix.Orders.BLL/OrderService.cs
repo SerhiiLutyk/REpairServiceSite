@@ -16,6 +16,7 @@ public record UpdateStatusRequest(OrderStatus Status);
 
 public record OrderDto(
     Guid Id,
+    Guid? UserId,
     string CustomerName,
     string Phone,
     int DeviceTypeId,
@@ -26,7 +27,7 @@ public record OrderDto(
     DateTime CreatedAt,
     DateTime UpdatedAt)
 {
-    public static OrderDto From(Order o) => new(o.Id, o.CustomerName, o.Phone, o.DeviceTypeId,
+    public static OrderDto From(Order o) => new(o.Id, o.UserId, o.CustomerName, o.Phone, o.DeviceTypeId,
         o.ServiceId, o.ProblemDescription, o.EstimatedPrice, o.Status, o.CreatedAt, o.UpdatedAt);
 }
 
@@ -39,8 +40,9 @@ public interface IOrderNotifier
 public interface IOrderService
 {
     Task<IReadOnlyList<OrderDto>> GetAllAsync(CancellationToken ct = default);
+    Task<IReadOnlyList<OrderDto>> GetByUserAsync(Guid userId, CancellationToken ct = default);
     Task<OrderDto?> GetByIdAsync(Guid id, CancellationToken ct = default);
-    Task<OrderDto> CreateAsync(CreateOrderRequest request, CancellationToken ct = default);
+    Task<OrderDto> CreateAsync(CreateOrderRequest request, Guid? userId, CancellationToken ct = default);
     Task<OrderDto?> UpdateStatusAsync(Guid id, OrderStatus status, CancellationToken ct = default);
 }
 
@@ -50,16 +52,22 @@ public class OrderService(OrdersDbContext db, IOrderNotifier notifier) : IOrderS
         await db.Orders.AsNoTracking().OrderByDescending(o => o.CreatedAt)
             .Select(o => OrderDto.From(o)).ToListAsync(ct);
 
+    public async Task<IReadOnlyList<OrderDto>> GetByUserAsync(Guid userId, CancellationToken ct = default) =>
+        await db.Orders.AsNoTracking().Where(o => o.UserId == userId)
+            .OrderByDescending(o => o.CreatedAt)
+            .Select(o => OrderDto.From(o)).ToListAsync(ct);
+
     public async Task<OrderDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
         var order = await db.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id, ct);
         return order is null ? null : OrderDto.From(order);
     }
 
-    public async Task<OrderDto> CreateAsync(CreateOrderRequest request, CancellationToken ct = default)
+    public async Task<OrderDto> CreateAsync(CreateOrderRequest request, Guid? userId, CancellationToken ct = default)
     {
         var order = new Order
         {
+            UserId = userId,
             CustomerName = request.CustomerName.Trim(),
             Phone = request.Phone.Trim(),
             DeviceTypeId = request.DeviceTypeId,

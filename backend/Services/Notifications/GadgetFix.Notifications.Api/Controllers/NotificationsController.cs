@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GadgetFix.Notifications.Api.Controllers;
 
-public record TelegramMessage(string Text);
+public record TelegramMessage(string Text, string? ChatId);
 
 [ApiController]
 [Route("api/notifications")]
@@ -14,7 +14,7 @@ public class NotificationsController(ITelegramSender telegram) : ControllerBase
         if (string.IsNullOrWhiteSpace(message.Text))
             return BadRequest(new { error = "Порожнє повідомлення." });
 
-        var sent = await telegram.SendAsync(message.Text, ct);
+        var sent = await telegram.SendAsync(message.Text, message.ChatId, ct);
         return Ok(new { sent });
     }
 }
