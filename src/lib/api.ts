@@ -65,6 +65,13 @@ export interface EstimateResult {
   confidence: number
   options: PartOption[]
 }
+export interface PhotoResult { deviceType?: string; model?: string; note: string }
+export const analyzePhoto = (imageBase64: string, mimeType: string) =>
+  request<PhotoResult>('/api/ai/analyze-photo', {
+    method: 'POST',
+    body: JSON.stringify({ imageBase64, mimeType }),
+  })
+
 export const estimatePrice = (deviceType: string, model: string, problem: string) =>
   request<EstimateResult>('/api/ai/estimate', {
     method: 'POST',

@@ -2,6 +2,9 @@ namespace GadgetFix.AI.Api;
 
 public record EstimateRequest(string DeviceType, string? Model, string Problem);
 
+public record PhotoRequest(string ImageBase64, string? MimeType);
+public record PhotoResult(string? DeviceType, string? Model, string Note);
+
 /// <summary>Варіант ремонту за типом запчастини.</summary>
 public record PartOption(string Tier, decimal Min, decimal Max, string Description);
 

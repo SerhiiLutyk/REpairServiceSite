@@ -4,7 +4,7 @@ namespace GadgetFix.AI.Api.Controllers;
 
 [ApiController]
 [Route("api/ai")]
-public class AiController(IEstimateService estimator) : ControllerBase
+public class AiController(IEstimateService estimator, GeminiEstimator gemini) : ControllerBase
 {
     /// <summary>Оцінка приблизної вартості ремонту за описом (LLM Groq з фолбеком на евристику).</summary>
     [HttpPost("estimate")]
@@ -16,17 +16,23 @@ public class AiController(IEstimateService estimator) : ControllerBase
         return Ok(await estimator.EstimateAsync(request, ct));
     }
 
-    /// <summary>
-    /// Аналіз фото задньої кришки для визначення типу гаджета.
-    /// Поки що повертає заглушку; передбачено інтеграцію з vision-моделлю.
-    /// </summary>
+    /// <summary>Аналіз фото гаджета для визначення типу/моделі (Gemini Vision).</summary>
     [HttpPost("analyze-photo")]
-    public ActionResult AnalyzePhoto()
+    public async Task<ActionResult<PhotoResult>> AnalyzePhoto(PhotoRequest request, CancellationToken ct)
     {
-        return Ok(new
+        if (string.IsNullOrWhiteSpace(request.ImageBase64))
+            return BadRequest(new { error = "Фото не передано." });
+        if (!gemini.Enabled)
+            return Ok(new PhotoResult(null, null, "Розпізнавання за фото недоступне (немає AI-ключа)."));
+
+        try
         {
-            detected = (string?)null,
-            message = "Розпізнавання за фото буде доступне найближчим часом. Поки вкажіть тип гаджета вручну.",
-        });
+            var result = await gemini.AnalyzePhotoAsync(request.ImageBase64, request.MimeType ?? "image/jpeg", ct);
+            return Ok(result);
+        }
+        catch
+        {
+            return Ok(new PhotoResult(null, null, "Не вдалося розпізнати гаджет. Вкажіть тип вручну."));
+        }
     }
 }

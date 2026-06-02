@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Bot, Loader2 } from 'lucide-react'
-import { estimatePrice, type EstimateResult } from '@/lib/api'
+import { Bot, Loader2, Camera } from 'lucide-react'
+import { estimatePrice, analyzePhoto, type EstimateResult } from '@/lib/api'
 
 const deviceTypes = ['Смартфон', 'Ноутбук', 'Планшет', 'Смарт-годинник']
 
@@ -11,6 +11,32 @@ export default function Calculator() {
   const [result, setResult] = useState<EstimateResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [photoLoading, setPhotoLoading] = useState(false)
+  const [photoNote, setPhotoNote] = useState<string | null>(null)
+
+  async function onPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setPhotoNote(null)
+    setPhotoLoading(true)
+    try {
+      const dataUrl = await new Promise<string>((res, rej) => {
+        const r = new FileReader()
+        r.onload = () => res(r.result as string)
+        r.onerror = rej
+        r.readAsDataURL(file)
+      })
+      const base64 = dataUrl.split(',')[1]
+      const r = await analyzePhoto(base64, file.type)
+      if (r.deviceType && deviceTypes.includes(r.deviceType)) setDeviceType(r.deviceType)
+      if (r.model) setModel(r.model)
+      setPhotoNote(r.note || 'Готово')
+    } catch {
+      setPhotoNote('Не вдалося розпізнати фото')
+    } finally {
+      setPhotoLoading(false)
+    }
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -39,6 +65,13 @@ export default function Calculator() {
       </div>
 
       <form onSubmit={onSubmit} className="mt-8 grid gap-4">
+        <label className="flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-brand-300 bg-brand-50 px-4 py-3 text-sm font-medium text-brand-700 transition hover:bg-brand-100">
+          {photoLoading ? <Loader2 className="animate-spin" size={16} /> : <Camera size={16} />}
+          Розпізнати гаджет за фото
+          <input type="file" accept="image/*" className="hidden" onChange={onPhoto} disabled={photoLoading} />
+        </label>
+        {photoNote && <p className="text-xs text-slate-500">{photoNote}</p>}
+
         <label className="grid gap-1 text-sm font-medium text-slate-700">
           Тип гаджета
           <select
