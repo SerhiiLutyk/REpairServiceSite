@@ -23,6 +23,24 @@ body {
   font-feature-settings: 'cv11', 'ss01';
 }
 
+/* ---- Темна тема (перемикається класом .dark на <html>) ---- */
+.dark body { background: #0b1120; color: #e2e8f0; }
+.dark .bg-white { background-color: #1e293b !important; }
+.dark .bg-slate-50 { background-color: #0f172a !important; }
+.dark .bg-slate-100 { background-color: #334155 !important; }
+.dark .text-slate-900 { color: #f1f5f9 !important; }
+.dark .text-slate-700 { color: #cbd5e1 !important; }
+.dark .text-slate-600 { color: #94a3b8 !important; }
+.dark .text-slate-500 { color: #94a3b8 !important; }
+.dark .border-slate-200 { border-color: #334155 !important; }
+.dark .border-slate-300 { border-color: #475569 !important; }
+.dark .border-slate-100 { border-color: #1e293b !important; }
+.dark .card { background-color: #1e293b; border-color: #334155; }
+.dark input,
+.dark select,
+.dark textarea { background-color: #0f172a; color: #e2e8f0; }
+.dark .bg-white\/80 { background-color: rgba(30, 41, 59, 0.8) !important; }
+
 /* Декоративні градієнтні плями */
 .blob {
   position: absolute;

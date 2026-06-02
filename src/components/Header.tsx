@@ -1,9 +1,16 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Wrench, LogOut } from 'lucide-react'
+import { Wrench, LogOut, Moon, Sun } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 
 export default function Header() {
   const { user, isAdmin, logout } = useAuth()
+  const [dark, setDark] = useState(() => localStorage.getItem('theme') === 'dark')
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', dark)
+    localStorage.setItem('theme', dark ? 'dark' : 'light')
+  }, [dark])
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
@@ -24,6 +31,13 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setDark((d) => !d)}
+            className="rounded-lg border border-slate-300 p-2 text-slate-600 transition hover:border-brand-500 hover:text-brand-600"
+            aria-label="Тема"
+          >
+            {dark ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
           {user ? (
             <>
               <Link to="/cabinet" className="hidden text-sm font-medium text-slate-600 transition hover:text-brand-600 sm:inline">
