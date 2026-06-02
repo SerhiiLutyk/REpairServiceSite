@@ -2,10 +2,17 @@
 // напр. http://localhost:5000 (порт gateway з Aspire-дашборду).
 const BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:5000'
 
+export const TOKEN_KEY = 'gadgetfix_token'
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const token = localStorage.getItem(TOKEN_KEY)
   const res = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
     ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...init?.headers,
+    },
   })
   if (!res.ok) {
     const body = await res.json().catch(() => null)
@@ -13,6 +20,32 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   }
   return res.status === 204 ? (undefined as T) : res.json()
 }
+
+// ---- Auth ----
+export interface User { id: string; fullName: string; phone: string; email?: string; telegramChatId?: string; role: number; createdAt: string }
+export interface AuthResponse { token: string; user: User }
+export interface UpdateProfile { fullName: string; email?: string; telegramChatId?: string }
+export const UserRole = { Client: 0, Admin: 1 } as const
+
+export const register = (fullName: string, phone: string, password: string, email?: string) =>
+  request<AuthResponse>('/api/users/register', {
+    method: 'POST',
+    body: JSON.stringify({ fullName, phone, email, password }),
+  })
+
+export const login = (phone: string, password: string) =>
+  request<AuthResponse>('/api/users/login', {
+    method: 'POST',
+    body: JSON.stringify({ phone, password }),
+  })
+
+export const getMe = () => request<User>('/api/users/me')
+
+export const updateProfile = (data: UpdateProfile) =>
+  request<User>('/api/users/me', { method: 'PUT', body: JSON.stringify(data) })
+
+export const generateTelegramCode = () =>
+  request<{ code: string }>('/api/users/me/telegram-code', { method: 'POST' })
 
 // ---- Catalog ----
 export interface DeviceType { id: number; name: string; slug: string; icon?: string }
@@ -23,7 +56,15 @@ export const getServices = (deviceTypeId?: number) =>
   request<RepairService[]>(`/api/catalog/services${deviceTypeId ? `?deviceTypeId=${deviceTypeId}` : ''}`)
 
 // ---- AI ----
-export interface EstimateResult { min: number; max: number; currency: string; explanation: string; confidence: number }
+export interface PartOption { tier: string; min: number; max: number; description: string }
+export interface EstimateResult {
+  min: number
+  max: number
+  currency: string
+  explanation: string
+  confidence: number
+  options: PartOption[]
+}
 export const estimatePrice = (deviceType: string, model: string, problem: string) =>
   request<EstimateResult>('/api/ai/estimate', {
     method: 'POST',
@@ -66,6 +107,8 @@ export const createOrder = (order: CreateOrder) =>
   request<Order>('/api/orders', { method: 'POST', body: JSON.stringify(order) })
 
 export const getOrders = () => request<Order[]>('/api/orders')
+
+export const getMyOrders = () => request<Order[]>('/api/orders/my')
 
 export const updateOrderStatus = (id: string, status: number) =>
   request<Order>(`/api/orders/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) })
