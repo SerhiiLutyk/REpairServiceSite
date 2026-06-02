@@ -111,6 +111,9 @@ export const getOrders = () => request<Order[]>('/api/orders')
 
 export const getMyOrders = () => request<Order[]>('/api/orders/my')
 
+export const cancelOrder = (id: string) =>
+  request<Order>(`/api/orders/${id}/cancel`, { method: 'PATCH' })
+
 // ---- Reviews ----
 export interface Review { id: number; authorName: string; rating: number; comment: string; createdAt: string }
 export interface ReviewStats { average: number; count: number }

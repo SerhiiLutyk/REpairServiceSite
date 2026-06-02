@@ -48,6 +48,7 @@ public interface IOrderService
     Task<OrderDto?> GetByIdAsync(Guid id, CancellationToken ct = default);
     Task<OrderDto> CreateAsync(CreateOrderRequest request, Guid? userId, CancellationToken ct = default);
     Task<OrderDto?> UpdateStatusAsync(Guid id, OrderStatus status, CancellationToken ct = default);
+    Task<OrderDto?> CancelByUserAsync(Guid id, Guid userId, CancellationToken ct = default);
 }
 
 public class OrderService(OrdersDbContext db, IOrderNotifier notifier) : IOrderService
@@ -103,5 +104,20 @@ public class OrderService(OrdersDbContext db, IOrderNotifier notifier) : IOrderS
             await notifier.NotifyReadyAsync(dto, ct);
 
         return dto;
+    }
+
+    public async Task<OrderDto?> CancelByUserAsync(Guid id, Guid userId, CancellationToken ct = default)
+    {
+        var order = await db.Orders.Include(o => o.History).FirstOrDefaultAsync(o => o.Id == id && o.UserId == userId, ct);
+        if (order is null) return null;
+        // Скасувати можна лише до початку ремонту
+        if (order.Status != OrderStatus.New && order.Status != OrderStatus.Diagnostics)
+            throw new InvalidOperationException("Замовлення вже в роботі — зверніться до сервісу.");
+
+        order.Status = OrderStatus.Cancelled;
+        order.UpdatedAt = DateTime.UtcNow;
+        order.History.Add(new OrderStatusHistory { OrderId = order.Id, Status = OrderStatus.Cancelled });
+        await db.SaveChangesAsync(ct);
+        return OrderDto.From(order);
     }
 }

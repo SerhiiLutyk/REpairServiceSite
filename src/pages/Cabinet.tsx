@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Loader2, Check, Send, Star } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import { getMyOrders, generateTelegramCode, createReview, OrderStatusLabels, type Order } from '@/lib/api'
+import { getMyOrders, generateTelegramCode, createReview, cancelOrder, OrderStatusLabels, type Order } from '@/lib/api'
 
 const statusColor: Record<number, string> = {
   0: 'bg-slate-100 text-slate-600',
@@ -165,6 +165,21 @@ export default function Cabinet() {
                     {new Date(o.createdAt).toLocaleDateString('uk-UA')}
                     {o.estimatedPrice ? ` · ~${o.estimatedPrice} грн` : ''}
                   </p>
+                  {(o.status === 0 || o.status === 1) && (
+                    <button
+                      onClick={async () => {
+                        try {
+                          const upd = await cancelOrder(o.id)
+                          setOrders((prev) => prev.map((x) => (x.id === o.id ? upd : x)))
+                        } catch (err) {
+                          setError(err instanceof Error ? err.message : 'Не вдалося скасувати')
+                        }
+                      }}
+                      className="mt-2 rounded-lg border border-red-200 px-3 py-1 text-xs font-medium text-red-600 transition hover:bg-red-50"
+                    >
+                      Скасувати
+                    </button>
+                  )}
                   {o.history && o.history.length > 1 && (
                     <ol className="mt-3 space-y-1 border-l-2 border-slate-100 pl-3">
                       {o.history.map((h, i) => (

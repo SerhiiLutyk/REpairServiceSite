@@ -48,6 +48,23 @@ public class OrdersController(IOrderService orders) : ControllerBase
         return order is null ? NotFound() : Ok(order);
     }
 
+    /// <summary>Клієнт скасовує власне замовлення (поки воно не в роботі).</summary>
+    [Authorize]
+    [HttpPatch("{id:guid}/cancel")]
+    public async Task<ActionResult<OrderDto>> Cancel(Guid id, CancellationToken ct)
+    {
+        if (!TryGetUserId(out var userId)) return Unauthorized();
+        try
+        {
+            var order = await orders.CancelByUserAsync(id, userId, ct);
+            return order is null ? NotFound() : Ok(order);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { error = ex.Message });
+        }
+    }
+
     /// <summary>Внутрішній ендпоінт для Telegram-бота (не проксується через gateway).</summary>
     [HttpGet("/internal/orders/by-user/{userId:guid}")]
     public async Task<IReadOnlyList<OrderDto>> ByUser(Guid userId, CancellationToken ct) =>
