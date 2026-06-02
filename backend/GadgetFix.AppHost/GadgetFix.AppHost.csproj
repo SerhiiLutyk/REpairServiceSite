@@ -20,6 +20,7 @@
     <ProjectReference Include="..\Services\Notifications\GadgetFix.Notifications.Api\GadgetFix.Notifications.Api.csproj" />
     <ProjectReference Include="..\GadgetFix.ApiGateway\GadgetFix.ApiGateway.csproj" />
     <ProjectReference Include="..\GadgetFix.Bot\GadgetFix.Bot.csproj" />
+    <ProjectReference Include="..\Services\Reviews\GadgetFix.Reviews.Api\GadgetFix.Reviews.Api.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Loader2, Check, Send } from 'lucide-react'
+import { Loader2, Check, Send, Star } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import { getMyOrders, generateTelegramCode, OrderStatusLabels, type Order } from '@/lib/api'
+import { getMyOrders, generateTelegramCode, createReview, OrderStatusLabels, type Order } from '@/lib/api'
 
 const statusColor: Record<number, string> = {
   0: 'bg-slate-100 text-slate-600',
@@ -22,6 +22,9 @@ export default function Cabinet() {
   const [orders, setOrders] = useState<Order[]>([])
   const [ordersLoading, setOrdersLoading] = useState(true)
   const [tgCode, setTgCode] = useState<string | null>(null)
+  const [rating, setRating] = useState(5)
+  const [comment, setComment] = useState('')
+  const [reviewDone, setReviewDone] = useState(false)
 
   useEffect(() => {
     if (user) setForm({ fullName: user.fullName, email: user.email ?? '' })
@@ -177,6 +180,46 @@ export default function Cabinet() {
             </ul>
           )}
         </div>
+      </div>
+
+      {/* Залишити відгук */}
+      <div className="card mt-8 p-6">
+        <h2 className="text-lg font-semibold text-slate-900">Залишити відгук</h2>
+        {reviewDone ? (
+          <p className="mt-3 text-sm text-green-600">Дякуємо за відгук!</p>
+        ) : (
+          <form
+            className="mt-4 grid gap-3"
+            onSubmit={async (e) => {
+              e.preventDefault()
+              try {
+                await createReview(rating, comment)
+                setReviewDone(true)
+              } catch {
+                setError('Не вдалося надіслати відгук')
+              }
+            }}
+          >
+            <div className="flex gap-1">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <button key={i} type="button" onClick={() => setRating(i)}>
+                  <Star size={24} className={i <= rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'} />
+                </button>
+              ))}
+            </div>
+            <textarea
+              required
+              rows={3}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Поділіться враженням про сервіс…"
+              className="rounded-xl border border-slate-300 px-4 py-2.5 outline-none focus:border-brand-500"
+            />
+            <button className="justify-self-start rounded-xl bg-brand-600 px-6 py-2.5 font-medium text-white transition hover:bg-brand-700">
+              Надіслати відгук
+            </button>
+          </form>
+        )}
       </div>
     </section>
   )

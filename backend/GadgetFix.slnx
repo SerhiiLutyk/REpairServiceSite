@@ -16,6 +16,11 @@
     <Project Path="Services/Orders/GadgetFix.Orders.BLL/GadgetFix.Orders.BLL.csproj" />
     <Project Path="Services/Orders/GadgetFix.Orders.DAL/GadgetFix.Orders.DAL.csproj" />
   </Folder>
+  <Folder Name="/Services/Reviews/">
+    <Project Path="Services/Reviews/GadgetFix.Reviews.Api/GadgetFix.Reviews.Api.csproj" />
+    <Project Path="Services/Reviews/GadgetFix.Reviews.BLL/GadgetFix.Reviews.BLL.csproj" />
+    <Project Path="Services/Reviews/GadgetFix.Reviews.DAL/GadgetFix.Reviews.DAL.csproj" />
+  </Folder>
   <Folder Name="/Services/Users/">
     <Project Path="Services/Users/GadgetFix.Users.Api/GadgetFix.Users.Api.csproj" />
     <Project Path="Services/Users/GadgetFix.Users.BLL/GadgetFix.Users.BLL.csproj" />

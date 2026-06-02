@@ -111,5 +111,13 @@ export const getOrders = () => request<Order[]>('/api/orders')
 
 export const getMyOrders = () => request<Order[]>('/api/orders/my')
 
+// ---- Reviews ----
+export interface Review { id: number; authorName: string; rating: number; comment: string; createdAt: string }
+export interface ReviewStats { average: number; count: number }
+export const getReviews = () => request<Review[]>('/api/reviews')
+export const getReviewStats = () => request<ReviewStats>('/api/reviews/stats')
+export const createReview = (rating: number, comment: string) =>
+  request<Review>('/api/reviews', { method: 'POST', body: JSON.stringify({ rating, comment }) })
+
 export const updateOrderStatus = (id: string, status: number) =>
   request<Order>(`/api/orders/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) })

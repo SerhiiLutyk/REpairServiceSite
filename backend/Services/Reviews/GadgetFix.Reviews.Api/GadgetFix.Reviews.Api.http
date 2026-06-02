@@ -1,0 +1,6 @@
+@GadgetFix.Reviews.Api_HostAddress = http://localhost:5188
+
+GET {{GadgetFix.Reviews.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

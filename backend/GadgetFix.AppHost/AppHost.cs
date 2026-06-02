@@ -9,6 +9,7 @@ var postgres = builder.AddPostgres("postgres")
 var usersDb = postgres.AddDatabase("usersdb");
 var catalogDb = postgres.AddDatabase("catalogdb");
 var ordersDb = postgres.AddDatabase("ordersdb");
+var reviewsDb = postgres.AddDatabase("reviewsdb");
 
 // Мікросервіси
 var users = builder.AddProject<Projects.GadgetFix_Users_Api>("users-api")
@@ -29,6 +30,10 @@ var orders = builder.AddProject<Projects.GadgetFix_Orders_Api>("orders-api")
     .WithReference(users)
     .WaitFor(ordersDb);
 
+var reviews = builder.AddProject<Projects.GadgetFix_Reviews_Api>("reviews-api")
+    .WithReference(reviewsDb)
+    .WaitFor(reviewsDb);
+
 // Telegram-бот (long polling) — спілкується з Users / Orders / AI
 builder.AddProject<Projects.GadgetFix_Bot>("bot")
     .WithReference(users)
@@ -42,6 +47,7 @@ builder.AddProject<Projects.GadgetFix_ApiGateway>("gateway")
     .WithReference(catalog)
     .WithReference(orders)
     .WithReference(ai)
-    .WithReference(notifications);
+    .WithReference(notifications)
+    .WithReference(reviews);
 
 builder.Build().Run();

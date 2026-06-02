@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import ReviewsSection from '@/components/ReviewsSection'
 import {
   Smartphone,
   Laptop,
@@ -125,6 +126,8 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      <ReviewsSection />
 
       {/* Contact / booking CTA */}
       <section id="contact" className="bg-white py-16">
