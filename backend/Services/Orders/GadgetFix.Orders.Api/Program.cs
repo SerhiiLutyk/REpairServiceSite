@@ -39,6 +39,11 @@ builder.Services.AddScoped<IOrderNotifier, HttpOrderNotifier>();
 builder.Services.AddHttpClient("notifications", c => c.BaseAddress = new Uri("https+http://notifications-api"));
 builder.Services.AddHttpClient("users", c => c.BaseAddress = new Uri("https+http://users-api"));
 
+// gRPC-клієнт до сервісу каталогу (міжсервісна комунікація через gRPC)
+builder.Services.AddGrpcClient<GadgetFix.Catalog.Grpc.CatalogGrpc.CatalogGrpcClient>(o =>
+    o.Address = new Uri("https://catalog-api"))
+    .AddServiceDiscovery();
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 

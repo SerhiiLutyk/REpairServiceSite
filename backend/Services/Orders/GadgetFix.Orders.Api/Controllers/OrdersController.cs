@@ -65,6 +65,16 @@ public class OrdersController(IOrderService orders) : ControllerBase
         }
     }
 
+    /// <summary>Перевірка типу гаджета через gRPC-виклик до сервісу Catalog.</summary>
+    [HttpGet("device-name/{deviceTypeId:int}")]
+    public async Task<ActionResult> DeviceName(int deviceTypeId,
+        [FromServices] GadgetFix.Catalog.Grpc.CatalogGrpc.CatalogGrpcClient grpc, CancellationToken ct)
+    {
+        var reply = await grpc.GetDeviceTypeAsync(
+            new GadgetFix.Catalog.Grpc.DeviceTypeRequest { DeviceTypeId = deviceTypeId }, cancellationToken: ct);
+        return Ok(new { exists = reply.Exists, name = reply.Name });
+    }
+
     /// <summary>Внутрішній ендпоінт для Telegram-бота (не проксується через gateway).</summary>
     [HttpGet("/internal/orders/by-user/{userId:guid}")]
     public async Task<IReadOnlyList<OrderDto>> ByUser(Guid userId, CancellationToken ct) =>

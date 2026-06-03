@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "GadgetFix.Catalog.Grpc";
+
+package catalog;
+
+// gRPC-сервіс каталогу для міжсервісної комунікації
+service CatalogGrpc {
+  rpc GetDeviceType (DeviceTypeRequest) returns (DeviceTypeReply);
+}
+
+message DeviceTypeRequest {
+  int32 device_type_id = 1;
+}
+
+message DeviceTypeReply {
+  bool exists = 1;
+  string name = 2;
+}

@@ -8,6 +8,7 @@ builder.AddServiceDefaults();
 builder.AddNpgsqlDbContext<CatalogDbContext>("catalogdb");
 
 builder.Services.AddScoped<ICatalogService, CatalogService>();
+builder.Services.AddGrpc();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -28,5 +29,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 app.MapControllers();
+app.MapGrpcService<GadgetFix.Catalog.Api.CatalogGrpcService>();
 
 app.Run();

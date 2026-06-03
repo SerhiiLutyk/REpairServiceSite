@@ -28,6 +28,7 @@ var orders = builder.AddProject<Projects.GadgetFix_Orders_Api>("orders-api")
     .WithReference(ordersDb)
     .WithReference(notifications)
     .WithReference(users)
+    .WithReference(catalog)
     .WaitFor(ordersDb);
 
 var reviews = builder.AddProject<Projects.GadgetFix_Reviews_Api>("reviews-api")
