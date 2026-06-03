@@ -29,7 +29,7 @@ export default function Footer() {
           <p className="text-sm font-semibold text-slate-900">Контакти</p>
           <ul className="mt-3 space-y-2 text-sm text-slate-500">
             <li className="flex items-center gap-2"><Phone size={15} /> +380 00 000 0000</li>
-            <li className="flex items-center gap-2"><MapPin size={15} /> м. Львів</li>
+            <li className="flex items-center gap-2"><MapPin size={15} /> м. Чернівці</li>
           </ul>
         </div>
       </div>

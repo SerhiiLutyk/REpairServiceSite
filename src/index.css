@@ -40,6 +40,13 @@ body {
 .dark select,
 .dark textarea { background-color: #0f172a; color: #e2e8f0; }
 .dark .bg-white\/80 { background-color: rgba(30, 41, 59, 0.8) !important; }
+/* Затемнення світлого градієнта hero у темній темі */
+.dark .from-brand-50 { --tw-gradient-from: #0b1120 !important; }
+.dark .via-white { --tw-gradient-via: #0f172a !important; }
+.dark .to-slate-50 { --tw-gradient-to: #0b1120 !important; }
+.dark .from-brand-50,
+.dark .via-white,
+.dark .to-slate-50 { --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to) !important; }
 
 /* Декоративні градієнтні плями */
 .blob {
