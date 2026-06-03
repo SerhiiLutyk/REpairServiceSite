@@ -1,10 +1,12 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 // PostgreSQL у контейнері (Docker) з веб-адмінкою pgAdmin.
-// Без WithDataVolume — БД ініціалізується чистою при кожному запуску,
-// що уникає конфлікту згенерованого пароля зі старим томом.
-var postgres = builder.AddPostgres("postgres")
+// Фіксований пароль + том даних: дані зберігаються між запусками,
+// а сталий пароль уникає конфлікту зі збереженим томом.
+var pgPassword = builder.AddParameter("pg-password", "Gadgetfix_2026", secret: true);
+var postgres = builder.AddPostgres("postgres", password: pgPassword)
     .WithImageTag("17.6-bookworm")
+    .WithDataVolume()
     .WithPgAdmin();
 
 var usersDb = postgres.AddDatabase("usersdb");
