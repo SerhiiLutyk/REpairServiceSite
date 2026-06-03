@@ -7,7 +7,7 @@ namespace GadgetFix.AI.Api;
 public class GeminiEstimator(HttpClient http, IConfiguration config, ILogger<GeminiEstimator> logger)
 {
     private readonly string? _apiKey = config["Gemini:ApiKey"];
-    private readonly string _model = config["Gemini:Model"] ?? "gemini-2.0-flash";
+    private readonly string _model = config["Gemini:Model"] ?? "gemini-2.5-flash";
 
     public bool Enabled => !string.IsNullOrWhiteSpace(_apiKey);
 
