@@ -38,7 +38,7 @@ export default function Home() {
             <Sparkles size={15} /> Ремонт з AI-оцінкою вартості
           </span>
           <h1 className="mx-auto mt-6 max-w-3xl text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl">
-            Ремонт гаджетів <span className="text-gradient">швидко й чесно</span>
+            Ремонт гаджетів <span className="block text-gradient">швидко й чесно</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
             Полагодимо смартфон, ноутбук чи планшет. Дізнайтесь приблизну ціну за

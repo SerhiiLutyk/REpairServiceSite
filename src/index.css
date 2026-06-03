@@ -40,6 +40,16 @@ body {
 .dark select,
 .dark textarea { background-color: #0f172a; color: #e2e8f0; }
 .dark .bg-white\/80 { background-color: rgba(30, 41, 59, 0.8) !important; }
+/* Світлі brand-блоки в темній темі (калькулятор, telegram, фото-бокс) */
+.dark .bg-brand-50 { background-color: #172554 !important; }
+.dark .bg-brand-100 { background-color: #1e3a8a !important; }
+.dark .border-brand-100 { border-color: #1e3a8a !important; }
+.dark .border-brand-200 { border-color: #1e40af !important; }
+.dark .border-brand-300 { border-color: #2553e6 !important; }
+.dark .text-brand-700 { color: #93c5fd !important; }
+.dark .hover\:bg-brand-100:hover { background-color: #1e40af !important; }
+.dark .hover\:bg-brand-50:hover { background-color: #1e3a8a !important; }
+
 /* Затемнення світлого градієнта hero у темній темі */
 .dark .from-brand-50 { --tw-gradient-from: #0b1120 !important; }
 .dark .via-white { --tw-gradient-via: #0f172a !important; }
