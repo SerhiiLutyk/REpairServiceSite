@@ -11,4 +11,10 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    watch: {
+      // не стежити за бекендом (зокрема заблокованими файлами .vs / bin / obj)
+      ignored: ['**/backend/**', '**/.vs/**', '**/bin/**', '**/obj/**'],
+    },
+  },
 })
