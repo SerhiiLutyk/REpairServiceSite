@@ -96,6 +96,66 @@ public class GroqEstimator(HttpClient http, IConfiguration config, ILogger<GroqE
 
     public bool Enabled => !string.IsNullOrWhiteSpace(_apiKey);
 
+    public async Task<string> ChatAsync(IEnumerable<ChatMessage> messages, CancellationToken ct)
+    {
+        const string system =
+            "Ти — ввічливий онлайн-консультант сервісного центру GadgetFix (ремонт гаджетів в Україні). " +
+            "Відповідай коротко українською про ремонт, орієнтовні ціни, терміни, гарантію та запис.";
+
+        var msgs = new List<object> { new { role = "system", content = system } };
+        msgs.AddRange(messages.Select(m => new { role = m.Role == "assistant" ? "assistant" : "user", content = m.Content }));
+
+        var payload = new { model = _model, temperature = 0.6, messages = msgs };
+        using var req = new HttpRequestMessage(HttpMethod.Post, "https://api.groq.com/openai/v1/chat/completions");
+        req.Headers.Add("Authorization", $"Bearer {_apiKey}");
+        req.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+
+        using var resp = await http.SendAsync(req, ct);
+        resp.EnsureSuccessStatusCode();
+        using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+        return doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString() ?? "…";
+    }
+
+    public async Task<PhotoResult> AnalyzePhotoAsync(string base64, string mime, CancellationToken ct)
+    {
+        const string text =
+            "На фото гаджет. Визнач тип (Смартфон/Ноутбук/Планшет/Смарт-годинник) і модель, якщо видно. " +
+            "Відповідай ЛИШЕ JSON: {\"deviceType\":\"...\",\"model\":\"... або null\",\"note\":\"коротко українською\"}.";
+
+        var payload = new
+        {
+            model = "meta-llama/llama-4-scout-17b-16e-instruct",
+            temperature = 0.2,
+            response_format = new { type = "json_object" },
+            messages = new[]
+            {
+                new
+                {
+                    role = "user",
+                    content = new object[]
+                    {
+                        new { type = "text", text },
+                        new { type = "image_url", image_url = new { url = $"data:{mime};base64,{base64}" } },
+                    },
+                },
+            },
+        };
+
+        using var req = new HttpRequestMessage(HttpMethod.Post, "https://api.groq.com/openai/v1/chat/completions");
+        req.Headers.Add("Authorization", $"Bearer {_apiKey}");
+        req.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+        using var resp = await http.SendAsync(req, ct);
+        resp.EnsureSuccessStatusCode();
+        using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+        var content = doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString() ?? "{}";
+        using var inner = JsonDocument.Parse(content);
+        var r = inner.RootElement;
+        return new PhotoResult(
+            r.TryGetProperty("deviceType", out var d) ? d.GetString() : null,
+            r.TryGetProperty("model", out var m) && m.ValueKind == JsonValueKind.String ? m.GetString() : null,
+            r.TryGetProperty("note", out var n) ? n.GetString() ?? "" : "");
+    }
+
     public async Task<EstimateResult> EstimateAsync(EstimateRequest request, CancellationToken ct)
     {
         var payload = new

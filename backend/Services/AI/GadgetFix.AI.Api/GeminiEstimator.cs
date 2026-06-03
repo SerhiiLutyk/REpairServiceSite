@@ -19,11 +19,14 @@ public class GeminiEstimator(HttpClient http, IConfiguration config, ILogger<Gem
             "Відповідай коротко українською про ремонт, орієнтовні ціни, терміни, гарантію та запис. " +
             "Якщо питання не по темі — м'яко поверни до теми ремонту.";
 
-        var contents = messages.Select(m => new
-        {
-            role = m.Role == "assistant" ? "model" : "user",
-            parts = new[] { new { text = m.Content } },
-        }).ToArray();
+        // Gemini вимагає, щоб історія починалася з повідомлення користувача
+        var contents = messages
+            .SkipWhile(m => m.Role != "user")
+            .Select(m => new
+            {
+                role = m.Role == "assistant" ? "model" : "user",
+                parts = new[] { new { text = m.Content } },
+            }).ToArray();
 
         var payload = new
         {

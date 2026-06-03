@@ -4,7 +4,7 @@ namespace GadgetFix.AI.Api.Controllers;
 
 [ApiController]
 [Route("api/ai")]
-public class AiController(IEstimateService estimator, GeminiEstimator gemini) : ControllerBase
+public class AiController(IEstimateService estimator, GeminiEstimator gemini, GroqEstimator groq) : ControllerBase
 {
     /// <summary>Оцінка приблизної вартості ремонту за описом (LLM Groq з фолбеком на евристику).</summary>
     [HttpPost("estimate")]
@@ -22,18 +22,21 @@ public class AiController(IEstimateService estimator, GeminiEstimator gemini) : 
     {
         if (request.Messages is null || request.Messages.Count == 0)
             return BadRequest(new { error = "Порожнє повідомлення." });
-        if (!gemini.Enabled)
-            return Ok(new ChatReply("Вітаю! Зараз консультант недоступний. Опишіть проблему через AI-калькулятор або залиште заявку."));
 
-        try
+        var take = request.Messages.TakeLast(12).ToList();
+
+        // Спершу Gemini, при помилці — Groq
+        if (gemini.Enabled)
         {
-            var take = request.Messages.TakeLast(12).ToList();
-            return Ok(new ChatReply(await gemini.ChatAsync(take, ct)));
+            try { return Ok(new ChatReply(await gemini.ChatAsync(take, ct))); }
+            catch { /* фолбек нижче */ }
         }
-        catch
+        if (groq.Enabled)
         {
-            return Ok(new ChatReply("Вибачте, сталася помилка. Спробуйте ще раз."));
+            try { return Ok(new ChatReply(await groq.ChatAsync(take, ct))); }
+            catch { /* фолбек нижче */ }
         }
+        return Ok(new ChatReply("Вітаю! Зараз консультант недоступний. Скористайтесь AI-калькулятором або залиште заявку."));
     }
 
     /// <summary>Аналіз фото гаджета для визначення типу/моделі (Gemini Vision).</summary>
@@ -42,17 +45,18 @@ public class AiController(IEstimateService estimator, GeminiEstimator gemini) : 
     {
         if (string.IsNullOrWhiteSpace(request.ImageBase64))
             return BadRequest(new { error = "Фото не передано." });
-        if (!gemini.Enabled)
-            return Ok(new PhotoResult(null, null, "Розпізнавання за фото недоступне (немає AI-ключа)."));
 
-        try
+        var mime = request.MimeType ?? "image/jpeg";
+        if (gemini.Enabled)
         {
-            var result = await gemini.AnalyzePhotoAsync(request.ImageBase64, request.MimeType ?? "image/jpeg", ct);
-            return Ok(result);
+            try { return Ok(await gemini.AnalyzePhotoAsync(request.ImageBase64, mime, ct)); }
+            catch { /* фолбек на Groq */ }
         }
-        catch
+        if (groq.Enabled)
         {
-            return Ok(new PhotoResult(null, null, "Не вдалося розпізнати гаджет. Вкажіть тип вручну."));
+            try { return Ok(await groq.AnalyzePhotoAsync(request.ImageBase64, mime, ct)); }
+            catch { /* фолбек нижче */ }
         }
+        return Ok(new PhotoResult(null, null, "Не вдалося розпізнати гаджет. Вкажіть тип вручну."));
     }
 }
