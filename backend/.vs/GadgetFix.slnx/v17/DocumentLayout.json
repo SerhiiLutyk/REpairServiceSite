@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\sluti\\Desktop\\_repaircheck\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A7006299-5BB8-E4FF-068F-BC37271EB338}|Tests\\GadgetFix.Tests\\GadgetFix.Tests.csproj|c:\\users\\sluti\\desktop\\_repaircheck\\backend\\tests\\gadgetfix.tests\\gadgetfix.tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{A7006299-5BB8-E4FF-068F-BC37271EB338}|Tests\\GadgetFix.Tests\\GadgetFix.Tests.csproj|solutionrelative:tests\\gadgetfix.tests\\gadgetfix.tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{981E085A-4944-8418-720B-7D182986976D}|GadgetFix.Bot\\GadgetFix.Bot.csproj|c:\\users\\sluti\\desktop\\_repaircheck\\backend\\gadgetfix.bot\\gadgetfix.bot.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{981E085A-4944-8418-720B-7D182986976D}|GadgetFix.Bot\\GadgetFix.Bot.csproj|solutionrelative:gadgetfix.bot\\gadgetfix.bot.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A7006299-5BB8-E4FF-068F-BC37271EB338}|Tests\\GadgetFix.Tests\\GadgetFix.Tests.csproj|c:\\users\\sluti\\desktop\\_repaircheck\\backend\\tests\\gadgetfix.tests\\gadgetfix.tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{A7006299-5BB8-E4FF-068F-BC37271EB338}|Tests\\GadgetFix.Tests\\GadgetFix.Tests.csproj|solutionrelative:tests\\gadgetfix.tests\\gadgetfix.tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{981E085A-4944-8418-720B-7D182986976D}|GadgetFix.Bot\\GadgetFix.Bot.csproj|c:\\users\\sluti\\desktop\\_repaircheck\\backend\\gadgetfix.bot\\botbackend.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -62,8 +62,12 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 5,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 3,
@@ -74,8 +78,7 @@
               "RelativeToolTip": "GadgetFix.Bot\\TelegramClient.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-02T18:06:08.579Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-02T18:06:08.579Z"
             },
             {
               "$type": "Document",
@@ -87,8 +90,7 @@
               "RelativeToolTip": "GadgetFix.Bot\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-02T18:05:26.574Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-02T18:05:26.574Z"
             },
             {
               "$type": "Document",
@@ -100,8 +102,7 @@
               "RelativeToolTip": "GadgetFix.Bot\\BotWorker.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-02T18:05:43.427Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-02T18:05:43.427Z"
             },
             {
               "$type": "Document",
@@ -113,13 +114,12 @@
               "RelativeToolTip": "GadgetFix.Bot\\BotBackend.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-02T18:05:26.851Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-02T18:05:26.851Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "GadgetFix.Bot",
+              "DocumentIndex": 0,
+              "Title": "GadgetFix.Bot.csproj",
               "DocumentMoniker": "C:\\Users\\sluti\\Desktop\\_repaircheck\\backend\\GadgetFix.Bot\\GadgetFix.Bot.csproj",
               "RelativeDocumentMoniker": "GadgetFix.Bot\\GadgetFix.Bot.csproj",
               "ToolTip": "C:\\Users\\sluti\\Desktop\\_repaircheck\\backend\\GadgetFix.Bot\\GadgetFix.Bot.csproj",
@@ -139,13 +139,12 @@
               "RelativeToolTip": "GadgetFix.Bot\\Properties\\launchSettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-06-02T18:05:10.539Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-02T18:05:10.539Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
-              "Title": "GadgetFix.Notifications.Api",
+              "Title": "GadgetFix.Notifications.Api.csproj",
               "DocumentMoniker": "C:\\Users\\sluti\\Desktop\\_repaircheck\\backend\\Services\\Notifications\\GadgetFix.Notifications.Api\\GadgetFix.Notifications.Api.csproj",
               "RelativeDocumentMoniker": "Services\\Notifications\\GadgetFix.Notifications.Api\\GadgetFix.Notifications.Api.csproj",
               "ToolTip": "C:\\Users\\sluti\\Desktop\\_repaircheck\\backend\\Services\\Notifications\\GadgetFix.Notifications.Api\\GadgetFix.Notifications.Api.csproj",
@@ -157,8 +156,8 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "GadgetFix.Tests",
+              "DocumentIndex": 1,
+              "Title": "GadgetFix.Tests.csproj",
               "DocumentMoniker": "C:\\Users\\sluti\\Desktop\\_repaircheck\\backend\\Tests\\GadgetFix.Tests\\GadgetFix.Tests.csproj",
               "RelativeDocumentMoniker": "Tests\\GadgetFix.Tests\\GadgetFix.Tests.csproj",
               "ToolTip": "C:\\Users\\sluti\\Desktop\\_repaircheck\\backend\\Tests\\GadgetFix.Tests\\GadgetFix.Tests.csproj",
@@ -178,8 +177,7 @@
               "RelativeToolTip": "Services\\Users\\GadgetFix.Users.BLL\\DTOs\\UserDtos.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-02T18:04:20.932Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-02T18:04:20.932Z"
             },
             {
               "$type": "Document",
@@ -191,8 +189,7 @@
               "RelativeToolTip": "Services\\Catalog\\GadgetFix.Catalog.DAL\\CatalogDbContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-02T18:03:44.901Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-02T18:03:44.901Z"
             },
             {
               "$type": "Document",
@@ -204,13 +201,12 @@
               "RelativeToolTip": "Services\\Catalog\\GadgetFix.Catalog.Api\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-02T18:03:30.531Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-02T18:03:30.531Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 11,
-              "Title": "GadgetFix.Catalog.BLL",
+              "Title": "GadgetFix.Catalog.BLL.csproj",
               "DocumentMoniker": "C:\\Users\\sluti\\Desktop\\_repaircheck\\backend\\Services\\Catalog\\GadgetFix.Catalog.BLL\\GadgetFix.Catalog.BLL.csproj",
               "RelativeDocumentMoniker": "Services\\Catalog\\GadgetFix.Catalog.BLL\\GadgetFix.Catalog.BLL.csproj",
               "ToolTip": "C:\\Users\\sluti\\Desktop\\_repaircheck\\backend\\Services\\Catalog\\GadgetFix.Catalog.BLL\\GadgetFix.Catalog.BLL.csproj",
@@ -223,7 +219,7 @@
             {
               "$type": "Document",
               "DocumentIndex": 12,
-              "Title": "GadgetFix.AI.Api",
+              "Title": "GadgetFix.AI.Api.csproj",
               "DocumentMoniker": "C:\\Users\\sluti\\Desktop\\_repaircheck\\backend\\Services\\AI\\GadgetFix.AI.Api\\GadgetFix.AI.Api.csproj",
               "RelativeDocumentMoniker": "Services\\AI\\GadgetFix.AI.Api\\GadgetFix.AI.Api.csproj",
               "ToolTip": "C:\\Users\\sluti\\Desktop\\_repaircheck\\backend\\Services\\AI\\GadgetFix.AI.Api\\GadgetFix.AI.Api.csproj",
@@ -232,10 +228,6 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2026-06-02T18:02:52.487Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
             }
           ]
         }
