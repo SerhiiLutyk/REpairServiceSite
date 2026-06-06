@@ -68,18 +68,37 @@ public class PriceEstimator
         }
 
         var mid = baseline * factor;
-
-        // Три цінові рівні запчастин
         decimal R(decimal v) => Math.Round(v, 0);
-        var options = new List<PartOption>
+
+        // Послуги без заміни деталі (чистка, профілактика, ПЗ) — одна фіксована ціна
+        var isService = new[] { "чист", "профілакт", "налаштув", "переустанов", "по", "оновлен" }
+            .Any(k => problem.Contains(k, StringComparison.OrdinalIgnoreCase))
+            && !problem.Contains("екран") && !problem.Contains("батар") && !problem.Contains("акумул");
+
+        List<PartOption> options;
+        if (isService)
         {
-            new("Китайські (бюджет)", R(mid * 0.6m), R(mid * 0.85m),
-                "Найдешевший варіант, неоригінальні комплектуючі. Гарантія коротша."),
-            new("Китайські (середні)", R(mid * 0.9m), R(mid * 1.15m),
-                "Якісні сумісні запчастини — оптимальне співвідношення ціна/якість."),
-            new("Оригінальні", R(mid * 1.25m), R(mid * 1.7m),
-                "Оригінальні комплектуючі виробника. Максимальна якість і гарантія."),
-        };
+            options = new List<PartOption>
+            {
+                new("Послуга", R(Math.Min(mid * 0.5m, 400m)), R(Math.Min(mid * 0.8m, 800m)),
+                    "Сервісна робота без заміни запчастин."),
+            };
+        }
+        else
+        {
+            // Реалістична стеля ціни залежно від типу пристрою
+            var cap = baseline >= 1000m ? 8000m : 6000m;
+            decimal C(decimal v) => Math.Min(R(v), cap);
+            options = new List<PartOption>
+            {
+                new("Китайська якість", C(mid * 0.6m), C(mid * 0.85m),
+                    "Бюджетні сумісні запчастини. Гарантія коротша."),
+                new("Середня якість", C(mid * 0.9m), C(mid * 1.15m),
+                    "Якісні сумісні запчастини — оптимальне співвідношення ціна/якість."),
+                new("Оригінальні запчастини", C(mid * 1.25m), C(mid * 1.6m),
+                    "Оригінальні комплектуючі виробника. Максимальна якість і гарантія."),
+            };
+        }
 
         var min = options.Min(o => o.Min);
         var max = options.Max(o => o.Max);
