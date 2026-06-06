@@ -9,6 +9,13 @@ var postgres = builder.AddPostgres("postgres", password: pgPassword)
     .WithDataVolume()
     .WithPgAdmin();
 
+// Ключі AI та Telegram беремо з конфігурації AppHost (user-secrets) і
+// прокидаємо у відповідні сервіси як змінні середовища — це надійніше,
+// ніж покладатися на user-secrets кожного дочірнього сервісу.
+var geminiKey = builder.Configuration["Gemini:ApiKey"] ?? "";
+var groqKey = builder.Configuration["Groq:ApiKey"] ?? "";
+var telegramToken = builder.Configuration["Telegram:BotToken"] ?? "";
+
 var usersDb = postgres.AddDatabase("usersdb");
 var catalogDb = postgres.AddDatabase("catalogdb");
 var ordersDb = postgres.AddDatabase("ordersdb");
@@ -23,9 +30,13 @@ var catalog = builder.AddProject<Projects.GadgetFix_Catalog_Api>("catalog-api")
     .WithReference(catalogDb)
     .WaitFor(catalogDb);
 
-var notifications = builder.AddProject<Projects.GadgetFix_Notifications_Api>("notifications-api");
+var notifications = builder.AddProject<Projects.GadgetFix_Notifications_Api>("notifications-api")
+    .WithEnvironment("Telegram__BotToken", telegramToken);
 
-var ai = builder.AddProject<Projects.GadgetFix_AI_Api>("ai-api");
+var ai = builder.AddProject<Projects.GadgetFix_AI_Api>("ai-api")
+    .WithEnvironment("Gemini__ApiKey", geminiKey)
+    .WithEnvironment("Gemini__Model", "gemini-2.5-flash")
+    .WithEnvironment("Groq__ApiKey", groqKey);
 
 var orders = builder.AddProject<Projects.GadgetFix_Orders_Api>("orders-api")
     .WithReference(ordersDb)
@@ -40,6 +51,7 @@ var reviews = builder.AddProject<Projects.GadgetFix_Reviews_Api>("reviews-api")
 
 // Telegram-бот (long polling) — спілкується з Users / Orders / AI
 builder.AddProject<Projects.GadgetFix_Bot>("bot")
+    .WithEnvironment("Telegram__BotToken", telegramToken)
     .WithReference(users)
     .WithReference(orders)
     .WithReference(ai);
