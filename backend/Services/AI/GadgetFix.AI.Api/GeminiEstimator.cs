@@ -51,8 +51,16 @@ public class GeminiEstimator(HttpClient http, IConfiguration config, ILogger<Gem
     public async Task<PhotoResult> AnalyzePhotoAsync(string base64, string mime, CancellationToken ct)
     {
         const string prompt =
-            "На фото гаджет. Визнач його тип (Смартфон/Ноутбук/Планшет/Смарт-годинник) і модель, якщо видно. " +
-            "Відповідай ЛИШЕ JSON: {\"deviceType\":\"...\",\"model\":\"... або null\",\"note\":\"коротко українською\"}.";
+            "Ти — експерт з ідентифікації електроніки. Уважно й детально розглянь фото пристрою та визнач його.\n" +
+            "На що дивитися: логотип бренду; кількість, розмір і розташування камер (вертикальний блок, квадратний модуль, коло тощо); " +
+            "форма корпусу й рамок; виріз/отвір під фронтальну камеру; розташування кнопок і портів; написи на корпусі.\n" +
+            "ПРАВИЛА:\n" +
+            "1. deviceType визначай завжди (Смартфон / Ноутбук / Планшет / Смарт-годинник).\n" +
+            "2. model вказуй ЛИШЕ якщо ти дійсно впевнений у конкретній моделі. " +
+            "Якщо впевнений лише в бренді або серії — вкажи бренд/серію (напр. \"Samsung Galaxy серії S\"), а не конкретну модель. " +
+            "Якщо визначити неможливо — постав model = null. НЕ ВИГАДУЙ модель навмання.\n" +
+            "3. У полі note коротко українською поясни, за якими ознаками ти зробив висновок і наскільки впевнений.\n" +
+            "Відповідай ЛИШЕ JSON: {\"deviceType\":\"...\",\"model\":\"... або null\",\"note\":\"...\"}.";
 
         var payload = new
         {
@@ -67,7 +75,7 @@ public class GeminiEstimator(HttpClient http, IConfiguration config, ILogger<Gem
                     },
                 },
             },
-            generationConfig = new { responseMimeType = "application/json", temperature = 0.2 },
+            generationConfig = new { responseMimeType = "application/json", temperature = 0.1 },
         };
 
         var url = $"https://generativelanguage.googleapis.com/v1beta/models/{_model}:generateContent";
