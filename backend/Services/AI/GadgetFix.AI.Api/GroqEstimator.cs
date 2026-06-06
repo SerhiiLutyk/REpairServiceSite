@@ -125,8 +125,10 @@ public class GroqEstimator(HttpClient http, IConfiguration config, ILogger<GroqE
             "якщо це нова версія — так і вкажи (напр. \"iPhone новітнього покоління, ймовірно Pro Max\").\n" +
             "ПРАВИЛА: deviceType (Смартфон/Ноутбук/Планшет/Смарт-годинник) визначай завжди; " +
             "визнач бренд за логотипом і вкажи якомога точнішу модель (бренд+серію, якщо не впевнений у поколінні); " +
+            "ОЦІНИ СТАН: шукай видимі пошкодження (тріщини/подряпини екрана, розбитий дисплей, тріснута камера, " +
+            "спухла батарея, деформований корпус, сліди вологи) і опиши в полі damage (або \"видимих пошкоджень не виявлено\"); " +
             "у note коротко українською поясни ознаки й рівень впевненості.\n" +
-            "Відповідай ЛИШЕ JSON: {\"deviceType\":\"...\",\"model\":\"...\",\"note\":\"...\"}.";
+            "Відповідай ЛИШЕ JSON: {\"deviceType\":\"...\",\"model\":\"...\",\"note\":\"...\",\"damage\":\"...\"}.";
 
         var payload = new
         {
@@ -159,7 +161,8 @@ public class GroqEstimator(HttpClient http, IConfiguration config, ILogger<GroqE
         return new PhotoResult(
             r.TryGetProperty("deviceType", out var d) ? d.GetString() : null,
             r.TryGetProperty("model", out var m) && m.ValueKind == JsonValueKind.String ? m.GetString() : null,
-            r.TryGetProperty("note", out var n) ? n.GetString() ?? "" : "");
+            r.TryGetProperty("note", out var n) ? n.GetString() ?? "" : "",
+            r.TryGetProperty("damage", out var dm) && dm.ValueKind == JsonValueKind.String ? dm.GetString() : null);
     }
 
     public async Task<EstimateResult> EstimateAsync(EstimateRequest request, CancellationToken ct)

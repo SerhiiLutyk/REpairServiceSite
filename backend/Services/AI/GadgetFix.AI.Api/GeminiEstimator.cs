@@ -62,8 +62,12 @@ public class GeminiEstimator(HttpClient http, IConfiguration config, ILogger<Gem
             "2. Визнач бренд за логотипом. model вказуй якомога точніше; якщо не впевнений у точному поколінні — " +
             "вкажи бренд + серію/орієнтовну модель (напр. \"Apple iPhone (Pro Max, новітнє покоління)\"). " +
             "Не заперечуй існування і не лишай null, якщо видно хоча б бренд.\n" +
-            "3. У note коротко українською поясни ознаки й рівень впевненості.\n" +
-            "Відповідай ЛИШЕ JSON: {\"deviceType\":\"...\",\"model\":\"...\",\"note\":\"...\"}.";
+            "3. ОЦІНИ ВІЗУАЛЬНИЙ СТАН: уважно шукай видимі пошкодження — тріщини чи подряпини на екрані/склі, " +
+            "розбитий дисплей, пошкоджена/тріснута камера, здута (спухла) батарея, деформований/зігнутий корпус, " +
+            "сліди вологи чи корозії, відсутні елементи. Опиши знайдене стисло українською у полі damage. " +
+            "Якщо видимих пошкоджень немає — damage = \"видимих пошкоджень не виявлено\".\n" +
+            "4. У note коротко українською поясни ознаки ідентифікації й рівень впевненості.\n" +
+            "Відповідай ЛИШЕ JSON: {\"deviceType\":\"...\",\"model\":\"...\",\"note\":\"...\",\"damage\":\"...\"}.";
 
         var payload = new
         {
@@ -97,7 +101,8 @@ public class GeminiEstimator(HttpClient http, IConfiguration config, ILogger<Gem
         return new PhotoResult(
             r.TryGetProperty("deviceType", out var d) ? d.GetString() : null,
             r.TryGetProperty("model", out var m) && m.ValueKind == JsonValueKind.String ? m.GetString() : null,
-            r.TryGetProperty("note", out var n) ? n.GetString() ?? "" : "");
+            r.TryGetProperty("note", out var n) ? n.GetString() ?? "" : "",
+            r.TryGetProperty("damage", out var dm) && dm.ValueKind == JsonValueKind.String ? dm.GetString() : null);
     }
 
     public async Task<EstimateResult> EstimateAsync(EstimateRequest request, CancellationToken ct)

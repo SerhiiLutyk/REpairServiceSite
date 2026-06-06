@@ -69,7 +69,7 @@ export interface ChatMsg { role: 'user' | 'assistant'; content: string }
 export const chat = (messages: ChatMsg[]) =>
   request<{ reply: string }>('/api/ai/chat', { method: 'POST', body: JSON.stringify({ messages }) })
 
-export interface PhotoResult { deviceType?: string; model?: string; note: string }
+export interface PhotoResult { deviceType?: string; model?: string; note: string; damage?: string }
 export const analyzePhoto = (imageBase64: string, mimeType: string) =>
   request<PhotoResult>('/api/ai/analyze-photo', {
     method: 'POST',

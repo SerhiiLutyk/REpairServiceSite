@@ -30,7 +30,14 @@ export default function Calculator() {
       const r = await analyzePhoto(base64, file.type)
       if (r.deviceType && deviceTypes.includes(r.deviceType)) setDeviceType(r.deviceType)
       if (r.model) setModel(r.model)
-      setPhotoNote(r.note || 'Готово')
+      // Якщо AI помітив пошкодження — підставляємо в опис поломки
+      const noDamage = !r.damage || /не виявлено/i.test(r.damage)
+      if (!noDamage) setProblem((p) => (p ? p : r.damage as string))
+      setPhotoNote(
+        [r.note, noDamage ? null : `Помічені пошкодження: ${r.damage}`]
+          .filter(Boolean)
+          .join(' '),
+      )
     } catch {
       setPhotoNote('Не вдалося розпізнати фото')
     } finally {
