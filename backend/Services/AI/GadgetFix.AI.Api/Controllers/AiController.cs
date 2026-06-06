@@ -57,6 +57,6 @@ public class AiController(IEstimateService estimator, GeminiEstimator gemini, Gr
             try { return Ok(await groq.AnalyzePhotoAsync(request.ImageBase64, mime, ct)); }
             catch { /* фолбек нижче */ }
         }
-        return Ok(new PhotoResult(null, null, "Не вдалося розпізнати гаджет. Вкажіть тип вручну."));
+        return Ok(new PhotoResult(null, null, "Не вдалося розпізнати гаджет. Вкажіть тип вручну.", null));
     }
 }
