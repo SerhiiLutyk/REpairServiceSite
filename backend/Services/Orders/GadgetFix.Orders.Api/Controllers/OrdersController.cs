@@ -48,6 +48,15 @@ public class OrdersController(IOrderService orders) : ControllerBase
         return order is null ? NotFound() : Ok(order);
     }
 
+    /// <summary>Редагування вартості замовлення (адміністратор).</summary>
+    [Authorize(Roles = "Admin")]
+    [HttpPatch("{id:guid}/price")]
+    public async Task<ActionResult<OrderDto>> UpdatePrice(Guid id, UpdatePriceRequest request, CancellationToken ct)
+    {
+        var order = await orders.UpdatePriceAsync(id, request.EstimatedPrice, ct);
+        return order is null ? NotFound() : Ok(order);
+    }
+
     /// <summary>Клієнт скасовує власне замовлення (поки воно не в роботі).</summary>
     [Authorize]
     [HttpPatch("{id:guid}/cancel")]

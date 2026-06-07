@@ -135,3 +135,6 @@ export const createReview = (rating: number, comment: string) =>
 
 export const updateOrderStatus = (id: string, status: number) =>
   request<Order>(`/api/orders/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) })
+
+export const updateOrderPrice = (id: string, estimatedPrice: number | null) =>
+  request<Order>(`/api/orders/${id}/price`, { method: 'PATCH', body: JSON.stringify({ estimatedPrice }) })

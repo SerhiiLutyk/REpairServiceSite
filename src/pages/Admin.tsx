@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Loader2, RefreshCw, Search } from 'lucide-react'
-import { getOrders, updateOrderStatus, OrderStatusLabels, type Order } from '@/lib/api'
+import { getOrders, updateOrderStatus, updateOrderPrice, OrderStatusLabels, type Order } from '@/lib/api'
 
 const statuses = [0, 1, 2, 3, 4, 5]
 
@@ -28,6 +28,13 @@ export default function Admin() {
 
   async function changeStatus(id: string, status: number) {
     const updated = await updateOrderStatus(id, status)
+    setOrders((prev) => prev.map((o) => (o.id === id ? updated : o)))
+  }
+
+  async function changePrice(id: string, value: string) {
+    const price = value.trim() === '' ? null : Number(value)
+    if (price !== null && Number.isNaN(price)) return
+    const updated = await updateOrderPrice(id, price)
     setOrders((prev) => prev.map((o) => (o.id === id ? updated : o)))
   }
 
@@ -133,18 +140,33 @@ export default function Admin() {
                   <th className="px-4 py-3">Клієнт</th>
                   <th className="px-4 py-3">Телефон</th>
                   <th className="px-4 py-3">Несправність</th>
+                  <th className="px-4 py-3">Ціна, грн</th>
                   <th className="px-4 py-3">Статус</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.length === 0 && (
-                  <tr><td colSpan={4} className="px-4 py-6 text-center text-slate-400">Нічого не знайдено</td></tr>
+                  <tr><td colSpan={5} className="px-4 py-6 text-center text-slate-400">Нічого не знайдено</td></tr>
                 )}
                 {filtered.map((o) => (
                   <tr key={o.id} className="border-t border-slate-100">
                     <td className="px-4 py-3 font-medium text-slate-900">{o.customerName}</td>
                     <td className="px-4 py-3 text-slate-600">{o.phone}</td>
                     <td className="px-4 py-3 text-slate-600">{o.problemDescription}</td>
+                    <td className="px-4 py-3">
+                      <input
+                        type="number"
+                        min="0"
+                        defaultValue={o.estimatedPrice ?? ''}
+                        onBlur={(e) => {
+                          const v = e.target.value
+                          if (v !== String(o.estimatedPrice ?? '')) changePrice(o.id, v)
+                        }}
+                        onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
+                        placeholder="—"
+                        className="w-24 rounded-lg border border-slate-300 px-2 py-1 outline-none focus:border-brand-500"
+                      />
+                    </td>
                     <td className="px-4 py-3">
                       <select
                         value={o.status}

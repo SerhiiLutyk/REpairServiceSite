@@ -14,6 +14,8 @@ public record CreateOrderRequest(
 
 public record UpdateStatusRequest(OrderStatus Status);
 
+public record UpdatePriceRequest(decimal? EstimatedPrice);
+
 public record StatusHistoryDto(OrderStatus Status, DateTime ChangedAt);
 
 public record OrderDto(
@@ -48,6 +50,7 @@ public interface IOrderService
     Task<OrderDto?> GetByIdAsync(Guid id, CancellationToken ct = default);
     Task<OrderDto> CreateAsync(CreateOrderRequest request, Guid? userId, CancellationToken ct = default);
     Task<OrderDto?> UpdateStatusAsync(Guid id, OrderStatus status, CancellationToken ct = default);
+    Task<OrderDto?> UpdatePriceAsync(Guid id, decimal? price, CancellationToken ct = default);
     Task<OrderDto?> CancelByUserAsync(Guid id, Guid userId, CancellationToken ct = default);
 }
 
@@ -104,6 +107,16 @@ public class OrderService(OrdersDbContext db, IOrderNotifier notifier) : IOrderS
             await notifier.NotifyReadyAsync(dto, ct);
 
         return dto;
+    }
+
+    public async Task<OrderDto?> UpdatePriceAsync(Guid id, decimal? price, CancellationToken ct = default)
+    {
+        var order = await db.Orders.Include(o => o.History).FirstOrDefaultAsync(o => o.Id == id, ct);
+        if (order is null) return null;
+        order.EstimatedPrice = price.HasValue ? Math.Max(0, price.Value) : null;
+        order.UpdatedAt = DateTime.UtcNow;
+        await db.SaveChangesAsync(ct);
+        return OrderDto.From(order);
     }
 
     public async Task<OrderDto?> CancelByUserAsync(Guid id, Guid userId, CancellationToken ct = default)
